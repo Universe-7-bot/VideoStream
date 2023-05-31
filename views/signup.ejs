@@ -82,6 +82,10 @@
                 else if (f_res.code == 201) {
                     document.getElementById("error").innerHTML = `<div class="alert alert-success text-center" role="alert" style="margin-bottom: 0">
                     ${f_res.msg}</div>`;
+
+                    setTimeout(() => {
+                        window.location.href = "/login";
+                    }, 1000)
                 }
             })
         };

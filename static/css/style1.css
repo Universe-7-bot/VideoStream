@@ -128,3 +128,146 @@
 }
 
 /* ------------------------------------------------------ */
+/* ------------------------ header ---------------------- */
+.navbar {
+    background-color: #160a4c;
+}
+
+.nav-website-name {
+    font-size: 26px;
+    font-weight: bolder;
+    margin-bottom: 0;
+    background-image: linear-gradient(51deg, rgb(63, 46, 130) 1%, rgb(126, 108, 199) 36%, rgb(206, 195, 252) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.nav-link {
+    color: white;
+    font-size: 16px;
+}
+
+.nav-link:hover {
+    color: #8466fa;
+}
+
+.nav-login-btn {
+    height: 2.5rem;
+    width: 5.5rem;
+    color: white;
+    border: none;
+    background: #6845f6;
+    border-radius: 5rem;
+    font-weight: bold;
+}
+
+.nav-login-btn:hover {
+    color: white;
+}
+
+.nav-signup-btn {
+    height: 2.5rem;
+    width: 5.5rem;
+    color: white;
+    border: none;
+    background: #6845f6;
+    border-radius: 5rem;
+    font-weight: bold;
+}
+
+.nav-signup-btn:hover {
+    color: white;
+}
+
+.nav-logout-btn {
+    height: 2.5rem;
+    width: 5.5rem;
+    color: white;
+    border: none;
+    background: #6845f6;
+    border-radius: 5rem;
+    font-weight: bold;
+}
+
+.nav-logout-btn:hover {
+    color: white;
+}
+
+.nav-upload-btn {
+    height: 2.5rem;
+    width: 5.5rem;
+    color: white;
+    border: none;
+    background: #6845f6;
+    border-radius: 5rem;
+    font-weight: bold;
+}
+
+.nav-upload-btn:hover {
+    color: white;
+}
+
+.index-div-text {
+    padding-left: 4rem;
+}
+
+.heading1 {
+    font-size: 60px;
+    font-weight: bolder;
+    color: white;
+    margin-bottom: 0;
+}
+
+.heading2 {
+    font-size: 60px;
+    font-weight: bolder;
+    background-image: linear-gradient(51deg, rgb(63, 46, 130) 1%, rgb(173, 160, 227) 36%, rgb(245, 242, 255) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 0;
+    padding-bottom: 0.5rem;
+}
+
+.index-text {
+    margin-top: 1rem;
+    color: rgb(198, 186, 246);
+    font-size: 17.5px
+}
+
+.index-btn {
+    height: 3.5rem;
+    width: 12rem;
+    color: white;
+    border: none;
+    background: #6845f6;
+    border-radius: 7rem;
+    font-size: 22px;
+    font-weight: bold;
+    margin-top: 1rem;
+}
+
+/* --------------------- index page --------------------- */
+.index-main-div {
+    background-color: #160a4c;
+    width: 100%;
+}
+
+.index-row {
+    width: 100%;
+}
+
+.index-col-1 {
+    height: 42.2rem;
+    width: 50%;
+}
+
+.index-col-2 {
+    height: 42.2rem;
+    width: 50%;
+}
+
+/* .index-img {
+    height: 40rem;
+    width: 90%;
+} */
+/* ------------------------------------------------------ */

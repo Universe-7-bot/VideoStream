@@ -77,6 +77,10 @@
                     else if (f_res.code == 200) {
                         document.getElementById("error-login").innerHTML = `<div class="alert alert-success text-center" role="alert" style="margin-bottom: 0">
                         ${f_res.msg}</div>`;
+
+                        setTimeout(() => {
+                            window.location.href = "/"; //redirect to / route
+                        }, 1000)
                     }
                 })
             };
