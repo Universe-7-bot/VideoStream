@@ -271,3 +271,141 @@
     width: 90%;
 } */
 /* ------------------------------------------------------ */
+/* --------------------- upload page -------------------- */
+.upload-main-div {
+    background-color: #160a4c;
+    width: 100%;
+}
+
+.upload-row {
+    width: 100%;
+}
+
+.upload-col-1 {
+    height: 42.2rem;
+    width: 50%;
+}
+
+.upload-col-2 {
+    height: 42.2rem;
+    width: 50%;
+}
+
+.upload-img {
+    height: 670px;
+    width: 670px;
+}
+
+.upload-header {
+    font-size: 40px;
+    font-weight: bolder;
+    color: white;
+    margin-bottom: 0;
+}
+
+/* drag drop zone */
+#drag-drop-zone {
+    width: 300px;
+    height: 200px;
+    border: 2px dashed #6845f6;
+    border-radius: 8px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+#drag-drop-zone:hover {
+    background-color: #6d52da;
+}
+
+#drag-drop-zone-img {
+    width: 300px;
+    height: 200px;
+    border: 2px dashed #6845f6;
+    border-radius: 8px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+#drag-drop-zone-img:hover {
+    background-color: #6d52da;
+}
+
+#video-wrapper {
+    width: 300px;
+    height: 200px;
+    display: none;
+    border-radius: 8px;
+}
+
+.uploaded-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border: 2px dashed #6845f6;
+    border-radius: 8px;
+}
+
+#image-wrapper {
+    width: 300px;
+    height: 200px;
+    display: none;
+    border-radius: 8px;
+}
+
+.uploaded-image {
+    width: 100%;
+    height: 100%;
+    /* object-fit: cover; */
+    border: 2px dashed #6845f6;
+    border-radius: 8px;
+}
+
+.drag-drop-text {
+    font-size: 16px;
+    margin-bottom: 0;
+    color: white;
+}
+
+#upload-button {
+    height: 2rem;
+    width: 5rem;
+    color: white;
+    border: none;
+    background: #6845f6;
+    border-radius: 7rem;
+    font-size: 15px;
+    font-weight: bold;
+    margin-top: 0.5rem;
+}
+
+#upload-button-img {
+    height: 2rem;
+    width: 5rem;
+    color: white;
+    border: none;
+    background: #6845f6;
+    border-radius: 7rem;
+    font-size: 15px;
+    font-weight: bold;
+    margin-top: 0.5rem;
+}
+
+.upload-icon {
+    height: 50px;
+    width: 50px;
+    color: #6845f6;
+}
+
+#file-input {
+    display: none;
+}
+
+#file-input-img {
+    display: none;
+}

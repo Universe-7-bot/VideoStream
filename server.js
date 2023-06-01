@@ -107,7 +107,7 @@ app.get("/logout", (req, res) => {
 
 app.get("/upload", (req, res) => {
     if (req.session.userid) { //authenticated user
-        
+        res.render("upload", { isAuthenticated: true });
     }
     else {
         res.redirect("/");
