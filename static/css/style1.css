@@ -291,17 +291,74 @@
     width: 50%;
 }
 
+.upload-wrapper-2 {
+    width: 80%;
+}
+
 .upload-img {
     height: 670px;
     width: 670px;
+}
+
+.upload-img-2 {
+    height: 670px;
+    width: 670px;
+    padding-left: 2rem;
+}
+
+.row-1 {
+    margin-bottom: 1.2rem;
 }
 
 .upload-header {
     font-size: 40px;
     font-weight: bolder;
     color: white;
-    margin-bottom: 0;
+    margin-bottom: 2.3rem;
 }
+
+.circle-icon {
+    height: 30px;
+    width: 30px;
+}
+
+.upload-sub-heading {
+    font-size: 25px;
+    font-weight: bold;
+    color: white;
+    margin-bottom: 0.6rem;
+}
+
+.upload-input {
+    background-color: #b3a2fa;
+    border-color: #6d52da;
+    margin-bottom: 1.2rem;
+}
+
+.upload-input:focus {
+    border-color: #6d52da;
+    box-shadow: 0 0 0 0.25rem #b3a2fa;
+}
+
+textarea {
+    resize: none;
+}
+
+.form-select {
+    background-color: #b3a2fa;
+    border-color: #6d52da;
+    margin-bottom: 5.5rem;
+}
+
+.form-select:focus {
+    background-color: white;
+    border-color: #6d52da;
+    box-shadow: 0 0 0 0.25rem #b3a2fa;
+}
+
+/* .form-select option:hover {
+    background-color: #6845f6 !important;
+} */
 
 /* drag drop zone */
 #drag-drop-zone {
