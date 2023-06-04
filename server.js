@@ -6,6 +6,8 @@ const session = require("express-session");
 const cookieParser = require("cookie-parser");
 const dotenv = require("dotenv");
 dotenv.config();
+const formidable = require("formidable");
+const fs = require("fs");
 const mongoose = require("mongoose");
 const user = require("./models/user.js");
 
@@ -111,6 +113,31 @@ app.get("/upload", (req, res) => {
     }
     else {
         res.redirect("/");
+    }
+})
+
+app.post("/upload-video", (req, res) => {
+    if (req.session.userid) {
+        const form = new formidable.IncomingForm();
+        form.parse(req, (err, fields, files) => {
+            if (err) {
+                return res.json({ msg: "Error parsing form data", code: 500 });
+            }
+
+            // console.log(files.video.filepath, files.thumbnail.filepath, fields.title, fields.description, fields.tags, fields.category)
+            const videoPath = files.video.filepath;
+            const thumbnailPath = files.thumbnail.filepath;
+            const title = fields.title;
+            const description = fields.description;
+            const tags = fields.tags;
+            const category = fields.category;
+
+            const newVideoPath = "static/videos/" + new Date().getTime() + "-" + files.video.newFilename;
+            const newThumbnailPath = "static/thumbnails/" + new Date().getTime() + "-" + files.thumbnail.newFilename;
+        })
+    }
+    else {
+        res.redirect("/login");
     }
 })
 

@@ -347,7 +347,7 @@ textarea {
 .form-select {
     background-color: #b3a2fa;
     border-color: #6d52da;
-    margin-bottom: 5.5rem;
+    margin-bottom: 1.2rem;
 }
 
 .form-select:focus {
@@ -359,6 +359,19 @@ textarea {
 /* .form-select option:hover {
     background-color: #6845f6 !important;
 } */
+
+.upload-btn {
+    height: 2.7rem;
+    width: 8rem;
+    color: white;
+    border: none;
+    background: #6845f6;
+    border-radius: 6rem;
+    font-size: 18px;
+    font-weight: bold;
+    margin-top: 1.2rem;
+    margin-bottom: 2rem;
+}
 
 /* drag drop zone */
 #drag-drop-zone {
