@@ -13,7 +13,18 @@ let UserSchema = new mongoose.Schema({
     password: {
         type: String,
         required: true
-    }
+    },
+    coverPhoto: String,
+    image: String,
+    subscribers: {
+        type: Number,
+        default: 0
+    },
+    subscriptions: [],
+    playlists: [],
+    videos: [],
+    history: [],
+    notification: []
 })
 
 module.exports = mongoose.model("user", UserSchema);

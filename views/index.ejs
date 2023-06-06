@@ -12,6 +12,7 @@
 
 <body>
   <%- include("components/header.ejs") %>
+  <% if (!isAuthenticated) { %>
     <div class="index-main-div">
       <div class="row index-row">
         <div class="col-md-6 index-col-1 d-flex align-items-center justify-content-center">
@@ -27,6 +28,11 @@
         </div>
       </div>
     </div>
+    <% } else { %>
+      <div class="index-main-div-auth">
+        
+      </div>
+      <% } %>
     <%- include("components/footer.ejs") %>
       <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"

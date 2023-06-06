@@ -8,8 +8,11 @@ const dotenv = require("dotenv");
 dotenv.config();
 const formidable = require("formidable");
 const fs = require("fs");
+const mv = require("mv");
+const { getVideoDurationInSeconds } = require("get-video-duration")
 const mongoose = require("mongoose");
 const user = require("./models/user.js");
+const video = require("./models/video.js");
 
 mongoose.set('strictQuery', false);
 mongoose.connect(process.env.DB_URL).then(() => {
@@ -33,8 +36,14 @@ app.use(express.json());
 
 const PORT = process.env.PORT || 5000;
 
-app.get("/", (req, res) => {
-    res.render("index", { isAuthenticated: req.session.userid ? true : false });
+app.get("/", async (req, res) => {
+    try {
+        const videos = await video.find({}).sort({ createdAt: -1 }); //returns all the documents present in the video collection sorted in descending order according to createdAt field and stores it to an array which can be accessed by videos parameter
+
+        res.render("index", { isAuthenticated: req.session.userid ? true : false, videos: videos });
+    } catch (err) {
+        console.log(err);
+    }
 })
 
 app.get("/login", (req, res) => {
@@ -57,7 +66,19 @@ app.post("/signup", async (req, res) => {
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);
-        const newUser = new user({ name, email, password: hashedPassword });
+        const newUser = new user({
+            name,
+            email,
+            password: hashedPassword,
+            coverPhoto: "",
+            image: "",
+            subscribers: 0,
+            subscriptions: [],
+            playlists: [],
+            videos: [],
+            history: [],
+            notification: []
+        });
         await newUser.save();
         res.json({ msg: "User created successfully", code: 201 })
     } catch (err) {
@@ -116,28 +137,96 @@ app.get("/upload", (req, res) => {
     }
 })
 
-app.post("/upload-video", (req, res) => {
-    if (req.session.userid) {
-        const form = new formidable.IncomingForm();
-        form.parse(req, (err, fields, files) => {
-            if (err) {
-                return res.json({ msg: "Error parsing form data", code: 500 });
-            }
+app.post("/upload-video", async (req, res) => {
+    try {
+        if (req.session.userid) {
+            const form = new formidable.IncomingForm();
+            form.parse(req, (err, fields, files) => {
+                if (err) {
+                    return res.json({ msg: "Error parsing form data", code: 500 });
+                }
 
-            // console.log(files.video.filepath, files.thumbnail.filepath, fields.title, fields.description, fields.tags, fields.category)
-            const videoPath = files.video.filepath;
-            const thumbnailPath = files.thumbnail.filepath;
-            const title = fields.title;
-            const description = fields.description;
-            const tags = fields.tags;
-            const category = fields.category;
+                // console.log(files.video.filepath, files.thumbnail.filepath, fields.title, fields.description, fields.tags, fields.category)
+                if (!files.video || !files.thumbnail) {
+                    return res.json({ msg: "Select all the fields", code: 500 });
+                }
+                const videoPath = files.video.filepath;
+                const thumbnailPath = files.thumbnail.filepath;
+                const title = fields.title;
+                const description = fields.description;
+                const tags = fields.tags;
+                const category = fields.category;
 
-            const newVideoPath = "static/videos/" + new Date().getTime() + "-" + files.video.newFilename;
-            const newThumbnailPath = "static/thumbnails/" + new Date().getTime() + "-" + files.thumbnail.newFilename;
-        })
-    }
-    else {
-        res.redirect("/login");
+                if (!title || !description || !tags || !category) {
+                    return res.json({ msg: "Select all the fields", code: 500 });
+                }
+
+                const newThumbnailPath = "static/thumbnails/" + new Date().getTime() + "-" + files.thumbnail.newFilename;
+                mv(thumbnailPath, newThumbnailPath, (err) => {
+                    if (err) console.log(err);
+                })
+
+                const newVideoPath = "static/videos/" + new Date().getTime() + "-" + files.video.newFilename;
+                mv(videoPath, newVideoPath, async (err) => {
+                    if (err) console.log(err);
+                    const existingUser = await user.findById(req.session.userid);
+                    console.log(existingUser);
+                    let currentTime = new Date().getTime();
+                    const videoDuration = await getVideoDurationInSeconds(newVideoPath);
+                    let hours = Math.floor(videoDuration / 3600);
+                    let minutes = Math.floor(videoDuration / 60) - (hours * 60);
+                    let seconds = Math.floor(videoDuration % 60);
+
+                    const newVideo = new video({
+                        user: {
+                            _id: existingUser._id,
+                            name: existingUser.name,
+                            image: existingUser.image,
+                            subscribers: existingUser.subscribers
+                        },
+                        filePath: newVideoPath,
+                        thumbnail: newThumbnailPath,
+                        title: title,
+                        description: description,
+                        tags: tags,
+                        category: category,
+                        createdAt: currentTime,
+                        minutes: minutes,
+                        seconds: seconds,
+                        hours: hours,
+                        watch: currentTime,
+                        views: 0,
+                        playlist: "",
+                        likers: [],
+                        dislikers: [],
+                        comment: []
+                    })
+                    await newVideo.save();
+                    user.findByIdAndUpdate(req.session.userid, {
+                        $push: {
+                            videos: {
+                                _id: existingUser._id,
+                                title: title,
+                                views: 0,
+                                thumbnail: newThumbnailPath,
+                                watch: currentTime
+                            }
+                        }
+                    }).then((updatedUser) => {
+                        console.log(updatedUser);
+                    }).catch((error) => {
+                        console.log(error);
+                    })
+
+                    res.json({ msg: "Video uploaded successfully", code: 400 })
+                })
+            })
+        }
+        else {
+            res.redirect("/login");
+        }
+    } catch (err) {
+        res.json({ msg: err.msg, code: 500 })
     }
 })
 

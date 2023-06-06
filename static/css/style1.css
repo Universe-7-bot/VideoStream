@@ -266,6 +266,12 @@
     width: 50%;
 }
 
+.index-main-div-auth {
+    height: auto;
+    width: 100%;
+    background-color: #160a4c;
+}
+
 /* .index-img {
     height: 40rem;
     width: 90%;
