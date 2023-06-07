@@ -156,21 +156,24 @@ app.post("/upload-video", async (req, res) => {
                 const description = fields.description;
                 const tags = fields.tags;
                 const category = fields.category;
+                // console.log(files.video, files.thumbnail);
 
                 if (!title || !description || !tags || !category) {
                     return res.json({ msg: "Select all the fields", code: 500 });
                 }
 
-                const newThumbnailPath = "static/thumbnails/" + new Date().getTime() + "-" + files.thumbnail.newFilename;
+                const newThumbnailPath = "static/thumbnails/" + new Date().getTime() + "-" + files.thumbnail.originalFilename;
+                // console.log(thumbnailPath, newThumbnailPath);
                 mv(thumbnailPath, newThumbnailPath, (err) => {
                     if (err) console.log(err);
                 })
 
-                const newVideoPath = "static/videos/" + new Date().getTime() + "-" + files.video.newFilename;
+                const newVideoPath = "static/videos/" + new Date().getTime() + "-" + files.video.originalFilename;
+                // console.log(videoPath, newVideoPath);
                 mv(videoPath, newVideoPath, async (err) => {
                     if (err) console.log(err);
                     const existingUser = await user.findById(req.session.userid);
-                    console.log(existingUser);
+                    // console.log(existingUser);
                     let currentTime = new Date().getTime();
                     const videoDuration = await getVideoDurationInSeconds(newVideoPath);
                     let hours = Math.floor(videoDuration / 3600);
@@ -213,7 +216,7 @@ app.post("/upload-video", async (req, res) => {
                             }
                         }
                     }).then((updatedUser) => {
-                        console.log(updatedUser);
+                        // console.log(updatedUser);
                     }).catch((error) => {
                         console.log(error);
                     })
@@ -226,7 +229,21 @@ app.post("/upload-video", async (req, res) => {
             res.redirect("/login");
         }
     } catch (err) {
-        res.json({ msg: err.msg, code: 500 })
+        res.json({ msg: err.message, code: 500 })
+    }
+})
+
+app.get("/watch/:watch", async (req, res) => {
+    try {
+        const Video = await video.findOne({ watch: req.params.watch });
+        if (Video) {
+            res.render("video-page", { isAuthenticated: req.session.userid ? true : false, video: Video });
+        }
+        else {
+            res.json({ msg: "Video does not exist", code: 500 });
+        }
+    } catch (err) {
+        res.json({ msg: err.message, code: 501 });
     }
 })
 

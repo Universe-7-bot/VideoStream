@@ -1,3 +1,7 @@
+:root {
+    --card-bg: #5d3fd3;
+}
+
 .main-div {
     height: 100vh;
     width: 100%;
@@ -269,7 +273,85 @@
 .index-main-div-auth {
     height: auto;
     width: 100%;
+    min-height: 42.2rem;
     background-color: #160a4c;
+}
+
+.index-main-div-auth-row {
+    width: 100%;
+    padding: 2.5rem 2.2rem 2.2rem 2.2rem;
+    row-gap: 3rem;
+}
+
+/* .index-main-div-auth-col {
+} */
+
+/* card */
+.card {
+    width: 18.5rem;
+    border: none;
+    border-radius: 1rem;
+    /* height: 20rem; */
+}
+
+.card-img-top {
+    height: 15rem;
+    width: 100%;
+    border-radius: 1rem 1rem 0 0;
+    /* object-fit: fill; */
+}
+
+.video-duration {
+    text-align: center;
+    margin-bottom: 0;
+    background-color: var(--card-bg);
+    color: white;
+    font-weight: bold;
+}
+
+.card-body {
+    background-color: var(--card-bg);
+}
+
+.card-title {
+    color: white;
+}
+
+.card-text {
+    color: white;
+}
+
+.card-footer {
+    background-color: var(--card-bg);
+    padding: 0;
+    border: none;
+    border-radius: 0 0 1rem 1rem !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.watch-video-icon {
+    height: 30px;
+    width: 30px;
+}
+
+.watch-btn {
+    height: 2.5rem;
+    width: 11rem;
+    color: white;
+    background: #b09ef5;
+    border-radius: 5rem;
+    font-weight: bold;
+    border: none;
+    font-size: 17px;
+    text-decoration: none;
+    margin-bottom: 1rem;
+}
+
+.watch-btn:hover {
+    background-color: #b09ef5;
+    color: white;
 }
 
 /* .index-img {
@@ -484,4 +566,43 @@ textarea {
 
 #file-input-img {
     display: none;
+}
+
+/* ---------------------------------------------------------------------------- */
+/* ------------------------------ watch-video page ---------------------------- */
+.video-main-div {
+    min-height: 42.2rem;
+    width: 100%;
+    background-color: #160a4c;
+    padding-left: 4rem;
+}
+
+#videoPlayer {
+    height: 30rem;
+    width: 70%;
+    margin: 2rem 0 1rem 0;
+    object-fit: fill;
+}
+
+.video-title {
+    color: white;
+    margin: 0 0 0 0;
+}
+
+.video-uploader-name {
+    color: white;
+    font-size: 16px;
+    margin: 0.2rem 0 0.5rem 0;
+}
+
+.blank1 {
+    width: 70%;
+    border-top: 2px solid #8466fa;
+}
+
+.video-posted-on {
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    margin: 0.5rem 0 0.5rem 0;
 }

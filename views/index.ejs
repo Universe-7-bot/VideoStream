@@ -29,8 +29,25 @@
       </div>
     </div>
     <% } else { %>
-      <div class="index-main-div-auth">
-        
+      <div class="index-main-div-auth d-flex align-items-center justify-content-center">
+        <div class="row index-main-div-auth-row">
+          <% videos.forEach((video) => { %>
+            <div class="col-md-3 index-main-div-auth-col d-flex align-items-center justify-content-center">
+              <div class="card">
+                <img src="<%= video.thumbnail.substring(7) %>" class="card-img-top" alt="video-thumbnail">
+                <p class="video-duration"><%= video.hours + ":" + video.minutes + ":" + video.seconds %></p>
+                <div class="card-body">
+                  <h5 class="card-title"><%= video.title %></h5>
+                  <p class="card-text"><%= video.category %></p>
+                </div>
+                <div class="card-footer">
+                <a href="/watch/<%= video.watch %>" class="btn watch-btn"><img class="watch-video-icon mx-1"
+                    src="images/watch-video-icon.svg">Watch here</a>
+                </div>
+              </div>
+            </div>
+          <% }) %>
+        </div>
       </div>
       <% } %>
     <%- include("components/footer.ejs") %>
