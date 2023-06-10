@@ -235,15 +235,101 @@ app.post("/upload-video", async (req, res) => {
 
 app.get("/watch/:watch", async (req, res) => {
     try {
-        const Video = await video.findOne({ watch: req.params.watch });
-        if (Video) {
-            res.render("video-page", { isAuthenticated: req.session.userid ? true : false, video: Video });
+        if (req.session.userid) {
+            const Video = await video.findOne({ watch: req.params.watch });
+            if (Video) {
+                video.findByIdAndUpdate(Video._id, {
+                    $inc: {
+                        views: 1
+                    }
+                }).then((Video) => {
+
+                }).catch((error) => {
+                    console.log(error);
+                })
+                res.render("video-page", { isAuthenticated: req.session.userid ? true : false, video: Video });
+            }
+            else {
+                res.json({ msg: "Video does not exist", code: 500 });
+            }
         }
         else {
-            res.json({ msg: "Video does not exist", code: 500 });
+            res.redirect("/");
         }
     } catch (err) {
         res.json({ msg: err.message, code: 501 });
+    }
+})
+
+app.post("/do-like", (req, res) => {
+    if (req.session.userid) {
+        video.findOne({ //and operator is used to find by two fields
+            $and: [{
+                _id: req.body.videoId
+            },
+            {
+                likers: {
+                    _id: req.session.userid
+                }
+            }]
+        }).then((Video) => {
+            if (Video) {
+                res.json({ msg: "Already liked this video", code: 500 });
+            }
+            else {
+                video.findByIdAndUpdate(req.body.videoId, {
+                    $push: {
+                        likers: {
+                            _id: req.session.userid
+                        }
+                    }
+                }).then((Video) => {
+
+                })
+                res.json({ msg: "Video has been liked", code: 400 });
+            }
+        }).catch((error) => {
+            console.log(error);
+        })
+    }
+    else {
+        res.redirect("/");
+    }
+})
+
+app.post("/do-dislike", (req, res) => {
+    if (req.session.userid) {
+        video.findOne({ //and operator is used to find by two fields
+            $and: [{
+                _id: req.body.videoId
+            },
+            {
+                dislikers: {
+                    _id: req.session.userid
+                }
+            }]
+        }).then((Video) => {
+            if (Video) {
+                res.json({ msg: "Already disliked this video", code: 500 });
+            }
+            else {
+                video.findByIdAndUpdate(req.body.videoId, {
+                    $push: {
+                        dislikers: {
+                            _id: req.session.userid
+                        }
+                    }
+                }).then((Video) => {
+
+                })
+                res.json({ msg: "Video has been disliked", code: 400 });
+            }
+        }).catch((error) => {
+            console.log(error);
+        })
+    }
+    else {
+        res.redirect("/");
     }
 })
 
