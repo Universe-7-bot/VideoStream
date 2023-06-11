@@ -19,30 +19,34 @@
                 <input type="hidden" id="category" value="<%= video.category %>">
                 <video id="videoPlayer" poster="<%= baseUrl + video.thumbnail.substring(7) %>"
                     src="<%= baseUrl + video.filePath.substring(7) %>" controls></video>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <h2 class="video-title">
-                                <%= video.title %>
-                            </h2>
-                            <p class="video-uploader-name">uploaded by <%= video.user.name %>
-                            </p>
-                        </div>
-                        <div class="col-md-6 d-flex flex-row">
-                            <button onclick="doLike()" class="like-btn d-flex flex-row justify-content-center">
-                                <img class="like-icon" id="likeicon" src="/images/like-before.svg" alt="like">
-                                <p class="like-count mx-1"><%= video.likers.length %></p>
-                            </button>
-                            <button onclick="doDislike()" class="like-btn mx-3 d-flex flex-row justify-content-center">
-                                <img class="like-icon" id="dislikeicon" src="/images/dislike-before.svg" alt="dislike">
-                                <p class="like-count mx-1">
-                                    <%= video.dislikers.length %>
-                                </p>
-                            </button>
-                        </div>
+                <div class="row video-page-row">
+                    <div class="col-md-6">
+                        <h2 class="video-title">
+                            <%= video.title %>
+                        </h2>
+                        <p class="video-uploader-name">uploaded by <%= video.user.name %>
+                        </p>
                     </div>
+                    <div class="col-md-6 d-flex flex-row">
+                        <button onclick="doLike()" class="like-btn d-flex flex-row justify-content-center">
+                            <img class="like-icon" id="likeicon" src="/images/like-before.svg" alt="like">
+                            <p id="likecount" class="like-count mx-1">
+                                <%= video.likers.length %>
+                            </p>
+                        </button>
+                        <button onclick="doDislike()" class="like-btn mx-3 d-flex flex-row justify-content-center">
+                            <img class="like-icon" id="dislikeicon" src="/images/dislike-before.svg" alt="dislike">
+                            <p id="dislikecount" class="like-count mx-1">
+                                <%= video.dislikers.length %>
+                            </p>
+                        </button>
+                    </div>
+                </div>
                 <div class="blank1"></div>
-                <% const created=new Date(video.createdAt); const date=created.getDate() + "" ; 
-                const months=["January", "February" , "March" , "April" , "May" , "June" , "July" , "August" , "September" , "October" , "November" , "December" ]; %>
+
+                <% const created=new Date(video.createdAt); const date=created.getDate() + "" ; const
+                    months=["January", "February" , "March" , "April" , "May" , "June" , "July" , "August" , "September"
+                    , "October" , "November" , "December" ]; %>
 
                     <div class="video-stuff d-flex justify-content-between">
                         <p class="video-posted-on">Posted on <%= date.padStart(2, '0' ) + " " +
@@ -59,13 +63,57 @@
                     <p class="video-description">
                         <%= video.description %>
                     </p>
+                    <div class="comment d-flex flex-column">
+                        <p class="comment-heading">Leave a comment :</p>
+                        <textarea placeholder="Write your comment here..." class="form-control comment-text"
+                            id="textarea-comment" rows="4"></textarea>
+                        <button onclick="postComment()" class="comment-btn">Post comment</button>
+                    </div>
+                    <div class="show-comments">
+                        <% var allComments=video.comments.reverse(); allComments.forEach((comment)=> { %>
+                            <div class="comment-details d-flex flex-row">
+                                <img class="comment-img" src="<%= comment.user.image %>" alt="user-img" />
+                                <div class="comment-body d-flex flex-column">
+                                    <p class="comment-body-username">
+                                        <%= comment.user.name %>
+                                    </p>
+                                    <p class="comment-body-text">
+                                        <%= comment.comment %>
+                                    </p>
+                                </div>
+                            </div>
+                            <% }) %>
+                    </div>
             </div>
             <%- include("components/footer.ejs") %>
 
                 <script>
-                    const doLike = () => {
-                        document.getElementById("likeicon").src = "/images/like-after.svg";
+                    window.onload = () => {
                         const videoId = document.getElementById("videoId").value;
+                        if (!localStorage.getItem(videoId + "?isLiked"))
+                            localStorage.setItem(videoId + "?isLiked", "false");
+
+                        if (!localStorage.getItem(videoId + "?isDisliked"))
+                            localStorage.setItem(videoId + "?isDisliked", "false");
+
+                        let likeicon = document.getElementById("likeicon");
+                        let dislikeicon = document.getElementById("dislikeicon");
+
+                        if (localStorage.getItem(videoId + "?isLiked") == "false")
+                            likeicon.src = "/images/like-before.svg";
+                        else
+                            likeicon.src = "/images/like-after.svg";
+
+                        if (localStorage.getItem(videoId + "?isDisliked") == "false")
+                            dislikeicon.src = "/images/dislike-before.svg";
+                        else
+                            dislikeicon.src = "/images/dislike-after.svg";
+                    }
+
+                    const doLike = () => {
+                        const videoId = document.getElementById("videoId").value;
+                        localStorage.setItem(videoId + "?isLiked", "true");
+                        document.getElementById("likeicon").src = "/images/like-after.svg";
                         fetch("http://localhost:3000/do-like", {
                             method: "POST", headers: {
                                 "content-type": "application/json"
@@ -74,6 +122,8 @@
                             return res.json();
                         }).then((f_res) => {
                             if (f_res.code == 400) {
+                                var currentLike = parseInt(document.getElementById("likecount").innerHTML);
+                                document.getElementById("likecount").innerHTML = f_res.likeCount + 1; //currentLike + 1
                                 Toastify({
                                     text: f_res.msg,
                                     duration: 2000,
@@ -109,49 +159,99 @@
                     }
 
                     const doDislike = () => {
-                            document.getElementById("dislikeicon").src = "/images/dislike-after.svg";
-                            const videoId = document.getElementById("videoId").value;
-                            fetch("http://localhost:3000/do-dislike", {
-                                method: "POST", headers: {
-                                    "content-type": "application/json"
-                                }, body: JSON.stringify({ videoId })
-                            }).then((res) => {
-                                return res.json();
-                            }).then((f_res) => {
-                                if (f_res.code == 400) {
-                                    Toastify({
-                                        text: f_res.msg,
-                                        duration: 2000,
-                                        newWindow: true,
-                                        close: true,
-                                        gravity: "top",
-                                        position: "right",
-                                        stopOnFocus: true,
-                                        avatar: "/images/success-icon.svg",
-                                        style: {
-                                            background: "#000000",
-                                        },
-                                        onClick: function () { } // Callback after click
-                                    }).showToast();
-                                }
-                                else if (f_res.code == 500) {
-                                    Toastify({
-                                        text: f_res.msg,
-                                        duration: 2000,
-                                        newWindow: true,
-                                        close: true,
-                                        gravity: "top",
-                                        position: "right",
-                                        stopOnFocus: true,
-                                        // avatar: "images/success-icon.svg",
-                                        style: {
-                                            background: "#000000",
-                                        },
-                                        onClick: function () { } // Callback after click
-                                    }).showToast();
-                                }
-                            })
-                        }
+                        const videoId = document.getElementById("videoId").value;
+                        localStorage.setItem(videoId + "?isDisliked", "true");
+                        document.getElementById("dislikeicon").src = "/images/dislike-after.svg";
+                        fetch("http://localhost:3000/do-dislike", {
+                            method: "POST", headers: {
+                                "content-type": "application/json"
+                            }, body: JSON.stringify({ videoId })
+                        }).then((res) => {
+                            return res.json();
+                        }).then((f_res) => {
+                            if (f_res.code == 400) {
+                                var currentDislike = parseInt(document.getElementById("dislikecount").innerHTML);
+                                document.getElementById("dislikecount").innerHTML = f_res.dislikeCount + 1; //currentDislike + 1
+                                Toastify({
+                                    text: f_res.msg,
+                                    duration: 2000,
+                                    newWindow: true,
+                                    close: true,
+                                    gravity: "top",
+                                    position: "right",
+                                    stopOnFocus: true,
+                                    avatar: "/images/success-icon.svg",
+                                    style: {
+                                        background: "#000000",
+                                    },
+                                    onClick: function () { } // Callback after click
+                                }).showToast();
+                            }
+                            else if (f_res.code == 500) {
+                                Toastify({
+                                    text: f_res.msg,
+                                    duration: 2000,
+                                    newWindow: true,
+                                    close: true,
+                                    gravity: "top",
+                                    position: "right",
+                                    stopOnFocus: true,
+                                    // avatar: "images/success-icon.svg",
+                                    style: {
+                                        background: "#000000",
+                                    },
+                                    onClick: function () { } // Callback after click
+                                }).showToast();
+                            }
+                        })
+                    };
+
+                    const postComment = () => {
+                        const comment = document.getElementById("textarea-comment").value;
+                        const videoId = document.getElementById("videoId").value;
+                        fetch("http://localhost:3000/do-comment", {
+                            method: "POST", headers: {
+                                "content-type": "application/json"
+                            }, body: JSON.stringify({ videoId, comment })
+                        }).then((res) => {
+                            return res.json();
+                        }).then((f_res) => {
+                            if (f_res.code == 400) {
+                                var showcomments = document.getElementById("show-comments");
+                                var newcomment = "";
+                                newcomment += `<div class="comment-details d-flex flex-row">
+                                <img class="comment-img" src="${f_res.user.image}" alt="user-img" />
+                                <div class="comment-body d-flex flex-column">
+                                    <p class="comment-body-username">
+                                        ${f_res.user.name}
+                                    </p>
+                                    <p class="comment-body-text">
+                                        ${comment}
+                                    </p>
+                                </div>
+                                </div>`
+                                document.getElementById("show-comments").innerHTML = newcomment + document.getElementById("show-comments").innerHTML;
+                                comment = "";
+                                Toastify({
+                                    text: f_res.msg,
+                                    duration: 2000,
+                                    newWindow: true,
+                                    close: true,
+                                    gravity: "top",
+                                    position: "right",
+                                    stopOnFocus: true,
+                                    avatar: "images/success-icon.svg",
+                                    style: {
+                                        background: "#000000",
+                                    },
+                                    onClick: function () { } // Callback after click
+                                }).showToast();
+                            }
+                            else if (f_res.code == 500) {
+                                console.log(f_res.msg);
+                            }
+                        })
+                    };
                 </script>
 
                 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>

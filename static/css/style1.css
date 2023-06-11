@@ -595,6 +595,10 @@ textarea {
     margin: 0.2rem 0 1rem 0;
 }
 
+.video-page-row {
+    width: 70%;
+}
+
 .blank1 {
     width: 70%;
     border-top: 2px solid #8466fa;
@@ -655,4 +659,68 @@ textarea {
 .like-count {
     font-size: 19px;
     margin-top: 0.25rem;
+}
+
+.comment {
+    width: 70%;
+    height: 13rem;
+    border: 1px solid #8466fa;
+    margin: 0.5rem 0 0 0;
+    background-color: rgba(85, 59, 198, 0.2);
+    padding: 2rem;
+    border-radius: 0.5rem;
+}
+
+.comment-heading {
+    font-size: 20px;
+    font-weight: 500;
+    color: white;
+    margin: 0 0 0.5rem 0;
+}
+
+.comment-text {
+    margin: 0.5rem 0 1rem 0;
+    width: 100%;
+    border: none;
+    border-radius: 4px;
+}
+
+.comment-btn {
+    margin: 0 0 0 0;
+    height: 60%;
+    width: 15%;
+    background-color: rgba(126, 98, 236, 0.4);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-weight: bold;
+}
+
+.comment-img {
+    height: 80px;
+    width: 80px;
+    border: 1px solid rgba(126, 98, 236, 0.4);
+    border-radius: 4px;
+}
+
+.comment-details {
+    margin: 1rem 0 1rem 0;
+}
+
+.comment-body {
+    margin: 0 0 0 0.5rem;
+}
+
+.comment-body-username {
+    font-size: 18px;
+    color: white;
+    font-weight: 400;
+    margin-bottom: 0;
+}
+
+.comment-body-text {
+    font-size: 16px;
+    color: white;
+    margin-bottom: 0;
+    /* font-weight: 300; */
 }

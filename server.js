@@ -284,9 +284,8 @@ app.post("/do-like", (req, res) => {
                         }
                     }
                 }).then((Video) => {
-
+                    res.json({ msg: "Video has been liked", code: 400, likeCount: Video.likers.length });
                 })
-                res.json({ msg: "Video has been liked", code: 400 });
             }
         }).catch((error) => {
             console.log(error);
@@ -320,9 +319,9 @@ app.post("/do-dislike", (req, res) => {
                         }
                     }
                 }).then((Video) => {
-
+                    res.json({ msg: "Video has been disliked", code: 400, dislikeCount: Video.dislikers.length });
                 })
-                res.json({ msg: "Video has been disliked", code: 400 });
+
             }
         }).catch((error) => {
             console.log(error);
@@ -330,6 +329,65 @@ app.post("/do-dislike", (req, res) => {
     }
     else {
         res.redirect("/");
+    }
+})
+
+app.post("/do-comment", (req, res) => {
+    try {
+        if (req.session.userid) {
+            user.findById(req.session.userid).then((User) => {
+                // console.log(user); //commenter
+                video.findByIdAndUpdate(req.body.videoId, {
+                    $push: {
+                        comments: {
+                            _id: new mongoose.Types.ObjectId(), //generates a new id
+                            user: {
+                                _id: User._id,
+                                name: User.name,
+                                image: User.image
+                            },
+                            comment: req.body.comment,
+                            createdAt: new Date().getTime(),
+                            replies: []
+                        }
+                    }
+                }).then((video) => {
+                    // console.log(video);
+                    user.findByIdAndUpdate(video.user._id, { //sending notification to the video publisher
+                        $push: {
+                            notification: {
+                                _id: new mongoose.Types.ObjectId(),
+                                type: "new_commnet",
+                                content: req.body.comment,
+                                is_read: false,
+                                video_watch: video.watch,
+                                user: {
+                                    _id: User._id,
+                                    name: User.name,
+                                    image: User.image
+                                }
+                            }
+                        }
+                    }).then((updatedUser) => {
+                        // console.log(updatedUser);
+                        res.json({
+                            msg: "Comment has been posted", code: 400, user: {
+                                _id: updatedUser._id,
+                                name: updatedUser.name,
+                                image: updatedUser.image
+                            }
+                        })
+                    })
+                })
+            }).catch((err) => {
+                res.json({ msg: err.message, code: 500 });
+            })
+        }
+        else {
+            res.redirect("/");
+        }
+    } catch (error) {
+        console.log(error)
     }
 })
 
