@@ -69,10 +69,10 @@
                             id="textarea-comment" rows="4"></textarea>
                         <button onclick="postComment()" class="comment-btn">Post comment</button>
                     </div>
-                    <div class="show-comments">
+                    <div class="show-comments" id="showcomments">
                         <% var allComments=video.comments.reverse(); allComments.forEach((comment)=> { %>
                             <div class="comment-details d-flex flex-row">
-                                <img class="comment-img" src="<%= comment.user.image %>" alt="user-img" />
+                                <img class="comment-img" src="<%= comment.user.image %>" onerror="this.src='/images/user-icon.svg'" alt="user-img" />
                                 <div class="comment-body d-flex flex-column">
                                     <p class="comment-body-username">
                                         <%= comment.user.name %>
@@ -216,22 +216,7 @@
                         }).then((res) => {
                             return res.json();
                         }).then((f_res) => {
-                            if (f_res.code == 400) {
-                                var showcomments = document.getElementById("show-comments");
-                                var newcomment = "";
-                                newcomment += `<div class="comment-details d-flex flex-row">
-                                <img class="comment-img" src="${f_res.user.image}" alt="user-img" />
-                                <div class="comment-body d-flex flex-column">
-                                    <p class="comment-body-username">
-                                        ${f_res.user.name}
-                                    </p>
-                                    <p class="comment-body-text">
-                                        ${comment}
-                                    </p>
-                                </div>
-                                </div>`
-                                document.getElementById("show-comments").innerHTML = newcomment + document.getElementById("show-comments").innerHTML;
-                                comment = "";
+                            if (f_res.code == 300) {
                                 Toastify({
                                     text: f_res.msg,
                                     duration: 2000,
@@ -240,7 +225,38 @@
                                     gravity: "top",
                                     position: "right",
                                     stopOnFocus: true,
-                                    avatar: "images/success-icon.svg",
+                                    avatar: "/images/error-icon.svg",
+                                    style: {
+                                        background: "#000000",
+                                    },
+                                    onClick: function () { } // Callback after click
+                                }).showToast();
+                            }
+                            else if (f_res.code == 400) {
+                                const showcomments = document.getElementById("showcomments");
+                                const newcomment = `<div class="comment-details d-flex flex-row">
+                                <img class="comment-img" src="${f_res.user.image}" onerror="this.src='/images/user-icon.svg'" alt="user-img" />
+                                <div class="comment-body d-flex flex-column">
+                                <p class="comment-body-username">
+                                    ${f_res.user.name}
+                                </p>
+                                <p class="comment-body-text">
+                                    ${comment}
+                                </p>
+                                </div>
+                                </div>`;
+                                // showcomments.innerHTML = newcomment + showcomments.innerHTML; // works fine
+                                showcomments.insertAdjacentHTML("afterbegin", newcomment);
+                                document.getElementById("textarea-comment").value = "";
+                                Toastify({
+                                    text: f_res.msg,
+                                    duration: 2000,
+                                    newWindow: true,
+                                    close: true,
+                                    gravity: "top",
+                                    position: "right",
+                                    stopOnFocus: true,
+                                    avatar: "/images/success-icon.svg",
                                     style: {
                                         background: "#000000",
                                     },

@@ -335,6 +335,9 @@ app.post("/do-dislike", (req, res) => {
 app.post("/do-comment", (req, res) => {
     try {
         if (req.session.userid) {
+            if (req.body.comment.trim() == "") { //trim() removes leading and trailing spaces
+                return res.json({ msg: "Please enter a comment", code: 300 })
+            }
             user.findById(req.session.userid).then((User) => {
                 // console.log(user); //commenter
                 video.findByIdAndUpdate(req.body.videoId, {
