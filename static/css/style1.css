@@ -250,6 +250,20 @@
     margin-top: 1rem;
 }
 
+.dropdown-notification-btn {
+    height: 2.5rem;
+    width: 5.5rem;
+    background-color: rgb(90, 59, 215, 0.4);
+    border-radius: 8rem;
+    border: none;
+    color: #6845f6;
+}
+
+.notification-icon {
+    height: 30px;
+    width: 30px;
+}
+
 /* --------------------- index page --------------------- */
 .index-main-div {
     background-color: #160a4c;

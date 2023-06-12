@@ -116,7 +116,7 @@
                         document.getElementById("likeicon").src = "/images/like-after.svg";
                         fetch("http://localhost:3000/do-like", {
                             method: "POST", headers: {
-                                "content-type": "application/json"
+                                "Content-Type": "application/json"
                             }, body: JSON.stringify({ videoId })
                         }).then((res) => {
                             return res.json();
@@ -164,7 +164,7 @@
                         document.getElementById("dislikeicon").src = "/images/dislike-after.svg";
                         fetch("http://localhost:3000/do-dislike", {
                             method: "POST", headers: {
-                                "content-type": "application/json"
+                                "Content-Type": "application/json"
                             }, body: JSON.stringify({ videoId })
                         }).then((res) => {
                             return res.json();
@@ -211,7 +211,7 @@
                         const videoId = document.getElementById("videoId").value;
                         fetch("http://localhost:3000/do-comment", {
                             method: "POST", headers: {
-                                "content-type": "application/json"
+                                "Content-Type": "application/json"
                             }, body: JSON.stringify({ videoId, comment })
                         }).then((res) => {
                             return res.json();

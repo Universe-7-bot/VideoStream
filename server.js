@@ -11,6 +11,7 @@ const fs = require("fs");
 const mv = require("mv");
 const { getVideoDurationInSeconds } = require("get-video-duration")
 const mongoose = require("mongoose");
+const { ObjectId } = require("mongodb");
 const user = require("./models/user.js");
 const video = require("./models/video.js");
 
@@ -360,7 +361,7 @@ app.post("/do-comment", (req, res) => {
                         $push: {
                             notification: {
                                 _id: new mongoose.Types.ObjectId(),
-                                type: "new_commnet",
+                                type: "new_comment",
                                 content: req.body.comment,
                                 is_read: false,
                                 video_watch: video.watch,
@@ -391,6 +392,52 @@ app.post("/do-comment", (req, res) => {
         }
     } catch (error) {
         console.log(error)
+    }
+})
+
+app.get("/get-user", (req, res) => {
+    try {
+        if (req.session.userid) {
+            user.findById(req.session.userid).then((user) => {
+                // console.log(user);
+                res.json({ msg: "Records have been fetched", user: user, code: 500 });
+            })
+        }
+        else {
+            // res.json({ msg: "Please login to perform this action", code: 300 });
+            res.redirect("/");
+        }
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+app.post("/read-notification", (req, res) => {
+    try {
+        if (req.session.userid) {
+            user.updateOne({
+                $and: [{
+                    _id: req.session.userid
+                },
+                {
+                    "notification._id": new ObjectId(req.body.notificationId)
+                }]
+            }, {
+                $set: {
+                    "notification.$.is_read": true
+                }
+            }).then(() => {
+                return res.json({ msg: "Notification has been marked as read", code: 500 });
+            }).catch((error) => {
+                console.log(error);
+            })
+        }
+        else {
+            // res.json({ msg: "Please login to perform this action", code: 300 });
+            res.redirect("/");
+        }
+    } catch (error) {
+        console.log(error);
     }
 })
 

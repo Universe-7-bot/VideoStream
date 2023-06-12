@@ -70,7 +70,7 @@
 
             fetch("http://localhost:3000/signup", {
                 method: "POST", headers: {
-                    "content-type": "application/json"
+                    "Content-Type": "application/json"
                 }, body: JSON.stringify({ name, email, password })
             }).then((res) => {
                 return res.json();
