@@ -81,6 +81,17 @@
                                         <%= comment.comment %>
                                     </p>
                                 </div>
+                                <% if(isAuthenticated) { %>
+                                    <div class="reply-btn-wrapper d-flex align-items-end justify-content-end">
+                                        <button id="<%= comment._id %>" class="btn reply-btn" onclick="createReplyNode(this)" data-comment-id="<%= comment._id %>">Reply</button>
+                                    </div>
+                                    <% } %>
+                            </div>
+                            <div class="replies">
+                                    <div class="reply-node-container" id="reply-node-container"></div>
+                                <% comment.replies.forEach((reply)=> { %>
+
+                                    <% }) %>
                             </div>
                             <% }) %>
                     </div>
@@ -108,6 +119,21 @@
                             dislikeicon.src = "/images/dislike-before.svg";
                         else
                             dislikeicon.src = "/images/dislike-after.svg";
+                    }
+
+                    const createReplyNode = (element) => {
+                        const commentId = element.getAttribute("data-comment-id");
+                        const replyNodeContainer = document.getElementById("reply-node-container");
+
+                        const replyNode = document.createElement("div");
+                        replyNode.className = "reply-node";
+                        replyNode.innerHTML = `
+                        <p class="reply-node-heading">Write a reply :</p>
+                        <textarea placeholder="Write your reply here..." class="form-control reply-node-text" rows="3"></textarea>
+                        <button onclick="replyOnComment('${commentId}')" class="btn reply-node-btn">Post</button>`;
+                        
+                        replyNodeContainer.appendChild(replyNode);
+                        // replyNode.style.display = "block";
                     }
 
                     const doLike = () => {
