@@ -739,6 +739,36 @@ textarea {
     /* font-weight: 300; */
 }
 
+.reply-img {
+    height: 50px;
+    width: 50px;
+    border: 1px solid rgba(126, 98, 236, 0.4);
+    border-radius: 4px;
+}
+
+.reply-details {
+    padding: 0 0 0 0.7rem;
+    margin: 1rem 0 1rem 0;
+}
+
+.reply-body {
+    margin: 0 0 0 0.5rem;
+}
+
+.reply-body-username {
+    font-size: 16px;
+    color: white;
+    font-weight: 400;
+    margin-bottom: 0;
+}
+
+.reply-body-text {
+    font-size: 14px;
+    color: white;
+    margin-bottom: 0;
+    /* font-weight: 300; */
+}
+
 .reply-btn-wrapper {
     padding: 0 0 0 5rem;
 }
@@ -765,6 +795,7 @@ textarea {
 .reply-node-container {
     width: 40%;
     height: 9rem;
+    display: none;
 }
 
 .reply-node {
@@ -775,7 +806,6 @@ textarea {
     background-color: rgba(85, 59, 198, 0.2);
     padding: 1rem;
     border-radius: 0.5rem;
-    /* display: none; */
 }
 
 .reply-node-heading {
@@ -794,7 +824,7 @@ textarea {
 }
 
 .reply-node-btn {
-    margin: 0.5rem 0 0.5rem 0;
+    margin: 0.2rem 0 0.5rem 0;
     height: 2rem;
     width: 4rem;
     background-color: rgba(126, 98, 236, 0.4);
@@ -811,4 +841,3 @@ textarea {
     color: white;
     background-color: rgba(126, 98, 236, 0.4);
 }
-

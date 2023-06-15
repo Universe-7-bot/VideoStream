@@ -72,7 +72,8 @@
                     <div class="show-comments" id="showcomments">
                         <% var allComments=video.comments.reverse(); allComments.forEach((comment)=> { %>
                             <div class="comment-details d-flex flex-row">
-                                <img class="comment-img" src="<%= comment.user.image %>" onerror="this.src='/images/user-icon.svg'" alt="user-img" />
+                                <img class="comment-img" src="<%= comment.user.image %>"
+                                    onerror="this.src='/images/user-icon.svg'" alt="user-img" />
                                 <div class="comment-body d-flex flex-column">
                                     <p class="comment-body-username">
                                         <%= comment.user.name %>
@@ -83,14 +84,26 @@
                                 </div>
                                 <% if(isAuthenticated) { %>
                                     <div class="reply-btn-wrapper d-flex align-items-end justify-content-end">
-                                        <button id="<%= comment._id %>" class="btn reply-btn" onclick="createReplyNode(this)" data-comment-id="<%= comment._id %>">Reply</button>
+                                        <button id="" class="btn reply-btn" onclick="createReplyNode(this)"
+                                            data-comment-id="<%= comment._id %>">Reply</button>
                                     </div>
                                     <% } %>
                             </div>
-                            <div class="replies">
-                                    <div class="reply-node-container" id="reply-node-container"></div>
-                                <% comment.replies.forEach((reply)=> { %>
-
+                            <div class="reply-node-container" id="<%= comment._id %>"></div>
+                            <div class="replies" id="replies<%= comment._id%>">
+                                <% var allReplies=comment.replies.reverse(); allReplies.forEach((reply)=> { %>
+                                    <div class="reply-details d-flex flex-row">
+                                        <img class="reply-img" src="<%= reply.user.image %>"
+                                            onerror="this.src='/images/user-icon.svg'" alt="user-img" />
+                                        <div class="reply-body d-flex flex-column">
+                                            <p class="reply-body-username">
+                                                <%= reply.user.name %>
+                                            </p>
+                                            <p class="reply-body-text">
+                                                <%= reply.reply %>
+                                            </p>
+                                        </div>
+                                    </div>
                                     <% }) %>
                             </div>
                             <% }) %>
@@ -123,17 +136,92 @@
 
                     const createReplyNode = (element) => {
                         const commentId = element.getAttribute("data-comment-id");
-                        const replyNodeContainer = document.getElementById("reply-node-container");
+                        const replyNodeContainer = document.getElementById(commentId);
 
+                        if (replyNodeContainer.getElementsByClassName("reply-node").length > 0) {
+                            replyNodeContainer.style.display = "block";
+                            return;
+                        }
                         const replyNode = document.createElement("div");
                         replyNode.className = "reply-node";
                         replyNode.innerHTML = `
                         <p class="reply-node-heading">Write a reply :</p>
-                        <textarea placeholder="Write your reply here..." class="form-control reply-node-text" rows="3"></textarea>
-                        <button onclick="replyOnComment('${commentId}')" class="btn reply-node-btn">Post</button>`;
-                        
+                        <textarea id="textarea${commentId}" placeholder="Write your reply here..." class="form-control reply-node-text" rows="3"></textarea>
+                        <div class="d-flex flex-row">
+                        <button onclick="replyOnComment('${commentId}')" class="btn reply-node-btn">Post</button>
+                        <button onclick="deleteReplyNode('${commentId}')" class="btn reply-node-btn mx-2">Cancel</button>
+                        </div>`;
+
                         replyNodeContainer.appendChild(replyNode);
-                        // replyNode.style.display = "block";
+                        replyNodeContainer.style.display = "block";
+                    }
+
+                    const deleteReplyNode = (commentId) => {
+                        document.getElementById(commentId).style.display = "none";
+                    }
+
+                    const replyOnComment = (commentId) => {
+                        const reply = document.getElementById("textarea" + commentId).value;
+                        fetch("http://localhost:3000/do-reply", {
+                            method: "POST", headers: {
+                                "Content-Type": "application/json"
+                            }, body: JSON.stringify({ commentId, reply })
+                        }).then((res) => {
+                            return res.json();
+                        }).then((f_res) => {
+                            if (f_res.code == 300) {
+                                Toastify({
+                                    text: f_res.msg,
+                                    duration: 2000,
+                                    newWindow: true,
+                                    close: true,
+                                    gravity: "top",
+                                    position: "right",
+                                    stopOnFocus: true,
+                                    avatar: "/images/error-icon.svg",
+                                    style: {
+                                        background: "#000000",
+                                    },
+                                    onClick: function () { } // Callback after click
+                                }).showToast();
+                            }
+                            else if (f_res.code == 400) {
+                                const replies = document.getElementById("replies" + commentId);
+                                const newreply = `<div class="reply-details d-flex flex-row">
+                                        <img class="reply-img" src="${f_res.user.image}"
+                                            onerror="this.src='/images/user-icon.svg'" alt="user-img" />
+                                        <div class="reply-body d-flex flex-column">
+                                            <p class="reply-body-username">
+                                                ${f_res.user.name}
+                                            </p>
+                                            <p class="reply-body-text">
+                                                ${reply}
+                                            </p>
+                                        </div>
+                                    </div>`;
+                                    replies.innerHTML = newreply + replies.innerHTML;
+                                    // replies.insertAdjacentHTML("afterbegin", newreply);
+                                    document.getElementById("textarea" + commentId).value = "";
+                                    document.getElementById(commentId).style.display = "none";
+                                Toastify({
+                                    text: f_res.msg,
+                                    duration: 2000,
+                                    newWindow: true,
+                                    close: true,
+                                    gravity: "top",
+                                    position: "right",
+                                    stopOnFocus: true,
+                                    avatar: "/images/success-icon.svg",
+                                    style: {
+                                        background: "#000000",
+                                    },
+                                    onClick: function () { } // Callback after click
+                                }).showToast();
+                            }
+                            else if (f_res.code == 500) {
+                                console.log(f_res.msg);
+                            }
+                        })
                     }
 
                     const doLike = () => {

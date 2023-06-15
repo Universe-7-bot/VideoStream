@@ -441,6 +441,72 @@ app.post("/read-notification", (req, res) => {
     }
 })
 
+app.post("/do-reply", (req, res) => {
+    try {
+        if (req.session.userid) {
+            const { commentId, reply } = req.body;
+            if (reply.trim() == "") {
+                return res.json({ msg: "Please enter a reply", code: 300 })
+            }
+            user.findById(req.session.userid).then((existingUser) => {
+                video.findOneAndUpdate({
+                    "comments._id": new ObjectId(commentId)
+                }, {
+                    $push: {
+                        "comments.$.replies": {
+                            _id: new mongoose.Types.ObjectId(),
+                            user: {
+                                _id: existingUser._id,
+                                name: existingUser.name,
+                                image: existingUser.image
+                            },
+                            reply: reply,
+                            createdAt: new Date().getTime()
+                        }
+                    }
+                }).then((updatedVideo) => {
+                    const videoWatch = updatedVideo.watch;
+                    const comments = updatedVideo.comments;
+                    for (var i = 0; i < comments.length; i++) {
+                        if (comments[i]._id == commentId) {
+                            user.findByIdAndUpdate(comments[i].user._id, { //sending notification to the commenter
+                                $push: {
+                                    notification: {
+                                        _id: new mongoose.Types.ObjectId(),
+                                        type: "new_reply",
+                                        content: reply,
+                                        is_read: false,
+                                        video_watch: videoWatch,
+                                        user: {
+                                            id: existingUser._id,
+                                            name: existingUser.name,
+                                            image: existingUser.image
+                                        }
+                                    }
+                                }
+                            }).then(() => {
+                                return res.json({
+                                    msg: "Reply has been posted", code: 400, user: {
+                                        _id: existingUser._id,
+                                        name: existingUser.name,
+                                        image: existingUser.image
+                                }})
+                            })
+                            break;
+                        }
+                    }
+                })
+            })
+        } 
+        else {
+            // return res.json({ msg: "Please login to perform this operation", code: 500});
+            res.redirect("/");
+        }
+    } catch (error) {
+        console.log(error);
+    }
+})
+
 app.listen(PORT, (err) => {
     if (err) console.log(err);
     else console.log("Server is running on PORT : " + PORT);
