@@ -1,0 +1,22 @@
+<button class="subscribe-btn d-flex align-items-center justify-content-center" onclick="doSubscribe()">Subscribe</button>
+<p class="subscriber-count"><span id="total-subscribers"><%= video.user.subscribers %></span> subscribers</p>
+
+<script>
+    const doSubscribe = () => {
+        const subscribers = document.getElementById("total-subscribers");
+        const videoId = document.getElementById("videoId").value;
+        // document.getElementById("total-subscribers").innerHTML = subscribers.innerHTML;
+        fetch("http://localhost:3000/do-subscribe", {
+            method: "POST",
+            headers: {
+                "Content-Type" : "application/json"
+            },
+            body: JSON.stringify({videoId})
+        }).then((res) => {
+            return res.json();
+        }).then((f_res) => {
+            subscribers.innerHTML = parseInt(subscribers.innerHTML) + 1;
+            alert(f_res.msg);
+        })
+    }
+</script>

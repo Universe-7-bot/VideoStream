@@ -841,3 +841,24 @@ textarea {
     color: white;
     background-color: rgba(126, 98, 236, 0.4);
 }
+
+/* subscribe.ejs */
+.subscribe-btn {
+    height: 2.5rem;
+    width: 6rem;
+    border: none;
+    border-radius: 4rem;
+    cursor: pointer;
+    /* transition: all ease .7s; */
+    color: white;
+    background-color: rgba(133, 106, 238, 0.3);
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.subscriber-count {
+    margin: 0.5rem 0 0 0.5rem;
+    font-size: 15px;
+    font-weight: 400;
+    color: white;
+}

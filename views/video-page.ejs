@@ -20,14 +20,14 @@
                 <video id="videoPlayer" poster="<%= baseUrl + video.thumbnail.substring(7) %>"
                     src="<%= baseUrl + video.filePath.substring(7) %>" controls></video>
                 <div class="row video-page-row">
-                    <div class="col-md-6">
+                    <div class="col-md-5">
                         <h2 class="video-title">
                             <%= video.title %>
                         </h2>
                         <p class="video-uploader-name">uploaded by <%= video.user.name %>
                         </p>
                     </div>
-                    <div class="col-md-6 d-flex flex-row">
+                    <div class="col-md-4 d-flex flex-row justify-content-center">
                         <button onclick="doLike()" class="like-btn d-flex flex-row justify-content-center">
                             <img class="like-icon" id="likeicon" src="/images/like-before.svg" alt="like">
                             <p id="likecount" class="like-count mx-1">
@@ -41,6 +41,9 @@
                             </p>
                         </button>
                     </div>
+                    <div class="col-md-3 d-flex flex-row">
+                        <%- include("subscribe.ejs") %>
+                    </div>
                 </div>
                 <div class="blank1"></div>
 
@@ -53,7 +56,9 @@
                                 months[created.getMonth()] + " " + created.getFullYear() %>
                         </p>
                         <p class="video-views"><img src="/images/eye.svg" class="eye-icon" alt="eye-icon" />
-                            <%= video.views %> views
+                            <span id="views">
+                                <%= video.views %>
+                            </span> views
                         </p>
                     </div>
                     <div class="blank1"></div>
@@ -113,6 +118,7 @@
 
                 <script>
                     window.onload = () => {
+                        document.getElementById("views").innerHTML = parseInt(document.getElementById("views").innerHTML) + 1;
                         const videoId = document.getElementById("videoId").value;
                         if (!localStorage.getItem(videoId + "?isLiked"))
                             localStorage.setItem(videoId + "?isLiked", "false");
@@ -199,10 +205,10 @@
                                             </p>
                                         </div>
                                     </div>`;
-                                    replies.innerHTML = newreply + replies.innerHTML;
-                                    // replies.insertAdjacentHTML("afterbegin", newreply);
-                                    document.getElementById("textarea" + commentId).value = "";
-                                    document.getElementById(commentId).style.display = "none";
+                                replies.innerHTML = newreply + replies.innerHTML;
+                                // replies.insertAdjacentHTML("afterbegin", newreply);
+                                document.getElementById("textarea" + commentId).value = "";
+                                document.getElementById(commentId).style.display = "none";
                                 Toastify({
                                     text: f_res.msg,
                                     duration: 2000,

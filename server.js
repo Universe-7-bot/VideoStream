@@ -507,6 +507,53 @@ app.post("/do-reply", (req, res) => {
     }
 })
 
+app.post("/do-subscribe", (req, res) => {
+    try {
+        if (req.session.userid) {
+            const { videoId } = req.body;
+            video.findById(videoId).then((Video) => {
+                if (req.session.userid == Video.user._id)
+                    return res.json({ msg: "You can't subscribe to your own channel", code: 300 });
+                else {
+                    // checking whether channel is already subscribed or not
+                    user.findById(req.session.userid).then((User) => {
+                        const subscriptions = User.subscriptions;
+                        var isSubscribed = false;
+                        for (var i = 0; i < subscriptions.length; i++) {
+                            if (subscriptions[i]._id == video.user._id) {
+                                isSubscribed = true;
+                                break;
+                            }
+                        }
+                        if (isSubscribed) {
+                            return res.json({ msg: "You have already subscribed", code: 400 });
+                        }
+                        else {
+                            user.findOneAndUpdate({
+                                _id: Video.user._id
+                            }, {
+                                $inc: {
+                                    subscribers: 1
+                                }
+                            }, {
+                                returnOriginal: false
+                            }).then((updatedUser) => {
+                                
+                            })
+                        }
+                    })
+                }
+            })
+        }
+        else {
+            // res.json({ msg: "Please login to perform this operation", code: 300 });
+            res.redirect("/");
+        }
+    } catch (error) {
+        console.log(error);
+    }
+})
+
 app.listen(PORT, (err) => {
     if (err) console.log(err);
     else console.log("Server is running on PORT : " + PORT);
