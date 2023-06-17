@@ -357,6 +357,8 @@ app.post("/do-comment", (req, res) => {
                     }
                 }).then((video) => {
                     // console.log(video);
+                    // const newCommentIndex = video.comments.length - 1;
+                    // const commentID = video.comments[newCommentIndex]._id;
                     user.findByIdAndUpdate(video.user._id, { //sending notification to the video publisher
                         $push: {
                             notification: {
@@ -376,9 +378,9 @@ app.post("/do-comment", (req, res) => {
                         // console.log(updatedUser);
                         res.json({
                             msg: "Comment has been posted", code: 400, user: {
-                                _id: updatedUser._id,
-                                name: updatedUser.name,
-                                image: updatedUser.image
+                                _id: User._id,
+                                name: User.name,
+                                image: User.image,
                             }
                         })
                     })
@@ -490,14 +492,15 @@ app.post("/do-reply", (req, res) => {
                                         _id: existingUser._id,
                                         name: existingUser.name,
                                         image: existingUser.image
-                                }})
+                                    }
+                                })
                             })
                             break;
                         }
                     }
                 })
             })
-        } 
+        }
         else {
             // return res.json({ msg: "Please login to perform this operation", code: 500});
             res.redirect("/");
@@ -520,7 +523,7 @@ app.post("/do-subscribe", (req, res) => {
                         const subscriptions = User.subscriptions;
                         var isSubscribed = false;
                         for (var i = 0; i < subscriptions.length; i++) {
-                            if (subscriptions[i]._id == video.user._id) {
+                            if (subscriptions[i]._id == Video.user._id) {
                                 isSubscribed = true;
                                 break;
                             }
@@ -529,7 +532,7 @@ app.post("/do-subscribe", (req, res) => {
                             return res.json({ msg: "You have already subscribed", code: 400 });
                         }
                         else {
-                            user.findOneAndUpdate({
+                            user.findOneAndUpdate({ //incrementing subscriber count of the video publisher
                                 _id: Video.user._id
                             }, {
                                 $inc: {
@@ -538,7 +541,28 @@ app.post("/do-subscribe", (req, res) => {
                             }, {
                                 returnOriginal: false
                             }).then((updatedUser) => {
-                                
+                                user.updateOne({
+                                    _id: new ObjectId(req.session.userid)
+                                }, {
+                                    $push: {
+                                        subscriptions: {
+                                            _id: Video.user._id,
+                                            name: Video.user.name,
+                                            subscribers: updatedUser.subscribers,
+                                            image: updatedUser.image
+                                        }
+                                    }
+                                }).then((userData) => {
+                                    video.updateMany({
+                                        "user._id": Video.user._id
+                                    }, {
+                                        $inc: {
+                                            "user.subscribers": 1
+                                        }
+                                    }).then(() => {
+                                        return res.json({ msg: "Subscription has been added", code: 500 });
+                                    })
+                                })
                             })
                         }
                     })

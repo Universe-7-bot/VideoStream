@@ -15,8 +15,39 @@
         }).then((res) => {
             return res.json();
         }).then((f_res) => {
-            subscribers.innerHTML = parseInt(subscribers.innerHTML) + 1;
-            alert(f_res.msg);
+            if (f_res.code == 300 || f_res.code == 400) {
+                Toastify({
+                    text: f_res.msg,
+                    duration: 2000,
+                    newWindow: true,
+                    close: true,
+                    gravity: "top",
+                    position: "right",
+                    stopOnFocus: true,
+                    // avatar: "/images/error-icon.svg",
+                    style: {
+                        background: "#000000",
+                    },
+                    onClick: function () { } // Callback after click
+                }).showToast();
+            }
+            else if (f_res.code == 500) {
+                subscribers.innerHTML = parseInt(subscribers.innerHTML) + 1;
+                Toastify({
+                    text: f_res.msg,
+                    duration: 2000,
+                    newWindow: true,
+                    close: true,
+                    gravity: "top",
+                    position: "right",
+                    stopOnFocus: true,
+                    avatar: "/images/success-icon.svg",
+                    style: {
+                        background: "#000000",
+                    },
+                    onClick: function () { } // Callback after click
+                }).showToast();
+            }
         })
-    }
+    };
 </script>
