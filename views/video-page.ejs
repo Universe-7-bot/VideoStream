@@ -14,105 +14,110 @@
 <body>
     <% baseUrl="http://localhost:3000/" %>
         <%- include("components/header.ejs") %>
-            <div class="video-main-div">
-                <input type="hidden" id="videoId" value="<%= video._id %>">
-                <input type="hidden" id="category" value="<%= video.category %>">
-                <video id="videoPlayer" poster="<%= baseUrl + video.thumbnail.substring(7) %>"
-                    src="<%= baseUrl + video.filePath.substring(7) %>" controls></video>
-                <div class="row video-page-row">
-                    <div class="col-md-5">
-                        <h2 class="video-title">
-                            <%= video.title %>
-                        </h2>
-                        <p class="video-uploader-name">uploaded by <%= video.user.name %>
-                        </p>
-                    </div>
-                    <div class="col-md-4 d-flex flex-row justify-content-center">
-                        <button onclick="doLike()" class="like-btn d-flex flex-row justify-content-center">
-                            <img class="like-icon" id="likeicon" src="/images/like-before.svg" alt="like">
-                            <p id="likecount" class="like-count mx-1">
-                                <%= video.likers.length %>
+            <div class="video-main-div d-flex flex-row">
+                <div class="video-wrapper">
+                    <input type="hidden" id="videoId" value="<%= video._id %>">
+                    <input type="hidden" id="category" value="<%= video.category %>">
+                    <video id="videoPlayer" poster="<%= baseUrl + video.thumbnail.substring(7) %>"
+                        src="<%= baseUrl + video.filePath.substring(7) %>" controls></video>
+                    <div class="row video-page-row">
+                        <div class="col-md-5">
+                            <h2 class="video-title">
+                                <%= video.title %>
+                            </h2>
+                            <p class="video-uploader-name">uploaded by <%= video.user.name %>
                             </p>
-                        </button>
-                        <button onclick="doDislike()" class="like-btn mx-3 d-flex flex-row justify-content-center">
-                            <img class="like-icon" id="dislikeicon" src="/images/dislike-before.svg" alt="dislike">
-                            <p id="dislikecount" class="like-count mx-1">
-                                <%= video.dislikers.length %>
-                            </p>
-                        </button>
-                    </div>
-                    <div class="col-md-3 d-flex flex-row">
-                        <%- include("subscribe.ejs") %>
-                    </div>
-                </div>
-                <div class="blank1"></div>
-
-                <% const created=new Date(video.createdAt); const date=created.getDate() + "" ; const
-                    months=["January", "February" , "March" , "April" , "May" , "June" , "July" , "August" , "September"
-                    , "October" , "November" , "December" ]; %>
-
-                    <div class="video-stuff d-flex justify-content-between">
-                        <p class="video-posted-on">Posted on <%= date.padStart(2, '0' ) + " " +
-                                months[created.getMonth()] + " " + created.getFullYear() %>
-                        </p>
-                        <p class="video-views"><img src="/images/eye.svg" class="eye-icon" alt="eye-icon" />
-                            <span id="views">
-                                <%= video.views %>
-                            </span> views
-                        </p>
+                        </div>
+                        <div class="col-md-4 d-flex flex-row justify-content-center">
+                            <button onclick="doLike()" class="like-btn d-flex flex-row justify-content-center">
+                                <img class="like-icon" id="likeicon" src="/images/like-before.svg" alt="like">
+                                <p id="likecount" class="like-count mx-1">
+                                    <%= video.likers.length %>
+                                </p>
+                            </button>
+                            <button onclick="doDislike()" class="like-btn mx-3 d-flex flex-row justify-content-center">
+                                <img class="like-icon" id="dislikeicon" src="/images/dislike-before.svg" alt="dislike">
+                                <p id="dislikecount" class="like-count mx-1">
+                                    <%= video.dislikers.length %>
+                                </p>
+                            </button>
+                        </div>
+                        <div class="col-md-3 d-flex flex-row">
+                            <%- include("subscribe.ejs") %>
+                        </div>
                     </div>
                     <div class="blank1"></div>
-                    <p class="video-category"><b>Category :</b>
-                        <%= video.category %>
-                    </p>
-                    <p class="video-description">
-                        <%= video.description %>
-                    </p>
-                    <div class="comment d-flex flex-column">
-                        <p class="comment-heading">Leave a comment :</p>
-                        <textarea placeholder="Write your comment here..." class="form-control comment-text"
-                            id="textarea-comment" rows="4"></textarea>
-                        <button onclick="postComment()" class="comment-btn">Post comment</button>
-                    </div>
-                    <div class="show-comments" id="showcomments">
-                        <% var allComments=video.comments.reverse(); allComments.forEach((comment)=> { %>
-                            <div class="comment-details d-flex flex-row">
-                                <img class="comment-img" src="<%= comment.user.image %>"
-                                    onerror="this.src='/images/user-icon.svg'" alt="user-img" />
-                                <div class="comment-body d-flex flex-column">
-                                    <p class="comment-body-username">
-                                        <%= comment.user.name %>
-                                    </p>
-                                    <p class="comment-body-text">
-                                        <%= comment.comment %>
-                                    </p>
-                                </div>
-                                <% if(isAuthenticated) { %>
-                                    <div class="reply-btn-wrapper d-flex align-items-end justify-content-end">
-                                        <button id="" class="btn reply-btn" onclick="createReplyNode(this)"
-                                            data-comment-id="<%= comment._id %>">Reply</button>
+
+                    <% const created=new Date(video.createdAt); const date=created.getDate() + "" ; const
+                        months=["January", "February" , "March" , "April" , "May" , "June" , "July" , "August"
+                        , "September" , "October" , "November" , "December" ]; %>
+
+                        <div class="video-stuff d-flex justify-content-between">
+                            <p class="video-posted-on">Posted on <%= date.padStart(2, '0' ) + " " +
+                                    months[created.getMonth()] + " " + created.getFullYear() %>
+                            </p>
+                            <p class="video-views"><img src="/images/eye.svg" class="eye-icon" alt="eye-icon" />
+                                <span id="views">
+                                    <%= video.views %>
+                                </span> views
+                            </p>
+                        </div>
+                        <div class="blank1"></div>
+                        <p class="video-category"><b>Category :</b>
+                            <%= video.category %>
+                        </p>
+                        <p class="video-description">
+                            <%= video.description %>
+                        </p>
+                        <div class="comment d-flex flex-column">
+                            <p class="comment-heading">Leave a comment :</p>
+                            <textarea placeholder="Write your comment here..." class="form-control comment-text"
+                                id="textarea-comment" rows="4"></textarea>
+                            <button onclick="postComment()" class="comment-btn">Post comment</button>
+                        </div>
+                        <div class="show-comments" id="showcomments">
+                            <% var allComments=video.comments.reverse(); allComments.forEach((comment)=> { %>
+                                <div class="comment-details d-flex flex-row">
+                                    <img class="comment-img" src="<%= comment.user.image %>"
+                                        onerror="this.src='/images/user-icon.svg'" alt="user-img" />
+                                    <div class="comment-body d-flex flex-column">
+                                        <p class="comment-body-username">
+                                            <%= comment.user.name %>
+                                        </p>
+                                        <p class="comment-body-text">
+                                            <%= comment.comment %>
+                                        </p>
                                     </div>
-                                    <% } %>
-                            </div>
-                            <div class="reply-node-container" id="<%= comment._id %>"></div>
-                            <div class="replies" id="replies<%= comment._id%>">
-                                <% var allReplies=comment.replies.reverse(); allReplies.forEach((reply)=> { %>
-                                    <div class="reply-details d-flex flex-row">
-                                        <img class="reply-img" src="<%= reply.user.image %>"
-                                            onerror="this.src='/images/user-icon.svg'" alt="user-img" />
-                                        <div class="reply-body d-flex flex-column">
-                                            <p class="reply-body-username">
-                                                <%= reply.user.name %>
-                                            </p>
-                                            <p class="reply-body-text">
-                                                <%= reply.reply %>
-                                            </p>
+                                    <% if(isAuthenticated) { %>
+                                        <div class="reply-btn-wrapper d-flex align-items-end justify-content-end">
+                                            <button id="" class="btn reply-btn" onclick="createReplyNode(this)"
+                                                data-comment-id="<%= comment._id %>">Reply</button>
                                         </div>
-                                    </div>
-                                    <% }) %>
-                            </div>
-                            <% }) %>
-                    </div>
+                                        <% } %>
+                                </div>
+                                <div class="reply-node-container" id="<%= comment._id %>"></div>
+                                <div class="replies" id="replies<%= comment._id%>">
+                                    <% var allReplies=comment.replies.reverse(); allReplies.forEach((reply)=> { %>
+                                        <div class="reply-details d-flex flex-row">
+                                            <img class="reply-img" src="<%= reply.user.image %>"
+                                                onerror="this.src='/images/user-icon.svg'" alt="user-img" />
+                                            <div class="reply-body d-flex flex-column">
+                                                <p class="reply-body-username">
+                                                    <%= reply.user.name %>
+                                                </p>
+                                                <p class="reply-body-text">
+                                                    <%= reply.reply %>
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <% }) %>
+                                </div>
+                                <% }) %>
+                        </div>
+                </div>
+                <div class="side-bar">
+                    <%- include("related-videos.ejs") %>
+                </div>
             </div>
             <%- include("components/footer.ejs") %>
 

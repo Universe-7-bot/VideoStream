@@ -578,6 +578,32 @@ app.post("/do-subscribe", (req, res) => {
     }
 })
 
+app.get("/get-related-videos/:category/:videoId", async (req, res) => {
+    try {
+        const videos = await video.find({
+            $and: [{
+                category: req.params.category
+            }, {
+                _id: {
+                    $ne: new ObjectId(req.params.videoId) //not equal
+                }
+            }]
+        });
+        if (videos) {
+            //shuffle the videos
+            for (var i = 0; i < videos.length; i++) {
+                var x = videos[i];
+                var y = Math.floor(Math.random() * (i + 1));
+                videos[i] = videos[y];
+                videos[y] = x;
+            }
+            res.json({ relatedVideos: videos });
+        }
+    } catch (error) {
+        console.log(error);
+    }
+})
+
 app.listen(PORT, (err) => {
     if (err) console.log(err);
     else console.log("Server is running on PORT : " + PORT);

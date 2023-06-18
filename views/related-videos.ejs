@@ -1,0 +1,42 @@
+<div class="related-videos">
+    <h4 class="related-videos-header">Related Videos</h4>
+    <div id="related-videos" class="show-related-videos d-flex flex-column align-items-center">
+
+    </div>
+</div>
+
+<script>
+    const category = document.getElementById("category").value;
+    const videoId = document.getElementById("videoId").value;
+    const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    const baseUrl = "http://localhost:3000/";
+    fetch("http://localhost:3000/get-related-videos/" + category + "/" + videoId).then((res) => {
+        return res.json();
+    }).then((f_res) => {
+        const videos = f_res.relatedVideos;
+        // console.log(videos);
+        const relatedvideos = document.getElementById("related-videos");
+        for (var i = 0; i < videos.length; i++) {
+            // var flag = false;
+            var createdAt = new Date(videos[i].createdAt);
+            var date = createdAt.getDate() + "";
+            date = date.padStart(2, "0") + " " + months[createdAt.getMonth()] + ", " + createdAt.getFullYear();
+            const relatedVideoData = `
+            <div class="related-videos-card">
+            <div class="row related-videos-card-row g-0">
+                <div class="col-md-4 related-videos-card-col">
+                    <img src="${baseUrl + videos[i].thumbnail.substring(7)}" class="related-videos-card-img rounded-start" alt="related-video">
+                </div>
+                <div class="col-md-8 related-videos-card-col">
+                    <div class="related-videos-card-body">
+                        <a class="related-videos-card-title" href="/watch/${videos[i].watch}">${videos[i].title}</a>
+                        <p class="related-videos-card-text">${videos[i].user.name}</p>
+                        <p class="related-videos-card-text">${videos[i].hours + ":" + videos[i].minutes + ":" + videos[i].seconds}</p>
+                    </div>
+                </div>
+            </div>
+            </div>`;
+            relatedvideos.innerHTML += relatedVideoData;
+        }
+    })
+</script>
