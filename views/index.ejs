@@ -33,14 +33,14 @@
         <div class="row index-main-div-auth-row">
           <% videos.forEach((video) => { %>
             <div class="col-md-3 index-main-div-auth-col d-flex align-items-center justify-content-center">
-              <div class="card">
-                <img src="<%= video.thumbnail.substring(7) %>" class="card-img-top" alt="video-thumbnail">
+              <div class="card index-card">
+                <img src="<%= video.thumbnail.substring(7) %>" class="card-img-top index-card-img-top" alt="video-thumbnail">
                 <p class="video-duration"><%= video.hours + ":" + video.minutes + ":" + video.seconds %></p>
-                <div class="card-body">
-                  <h5 class="card-title"><%= video.title %></h5>
-                  <p class="card-text"><%= video.category %></p>
+                <div class="card-body index-card-body">
+                  <h5 class="card-title index-card-title"><%= video.title %></h5>
+                  <p class="card-text index-card-text"><%= video.category %></p>
                 </div>
-                <div class="card-footer">
+                <div class="card-footer index-card-footer">
                 <a href="/watch/<%= video.watch %>" class="btn watch-btn"><img class="watch-video-icon mx-1"
                     src="images/watch-video-icon.svg">Watch here</a>
                 </div>

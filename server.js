@@ -604,6 +604,83 @@ app.get("/get-related-videos/:category/:videoId", async (req, res) => {
     }
 })
 
+app.post("/save-history", (req, res) => {
+    try {
+        if (req.session.userid) {
+            const { videoId, watched } = req.body;
+            video.findOne({
+                _id: new ObjectId(videoId)
+            }).then((Video) => {
+                user.findOne({
+                    $and: [{
+                        _id: new ObjectId(req.session.userid)
+                    }, {
+                        "history.videoId": videoId
+                    }]
+                }).then((User) => {
+                    if (!User) {
+                        //push only if history of that video not exist
+                        user.updateOne({
+                            _id: new ObjectId(req.session.userid)
+                        }, {
+                            $push: {
+                                history: {
+                                    _id: new mongoose.Types.ObjectId(),
+                                    videoId: videoId,
+                                    watch: Video.watch,
+                                    title: Video.title,
+                                    watched: watched,
+                                    thumbnail: Video.thumbnail,
+                                    hours: Video.hours,
+                                    minutes: Video.minutes,
+                                    seconds: Video.seconds
+                                }
+                            }
+                        }).then(() => {
+                            res.json({ msg: "History has been added", code: 400 });
+                        })
+                    }
+                    else { //update recent watch history
+                        user.updateOne({
+                            $and: [{
+                                _id: new ObjectId(req.session.userid)
+                            }, {
+                                "history.videoId": videoId
+                            }]
+                        }, {
+                            $set: {
+                                "history.$.watched": watched
+                            }
+                        }).then(() => {
+                            res.json({ msg: "History has been updated", code: 401 })
+                        })
+                    }
+                })
+            })
+        }
+        else {
+            // res.json({ msg: "Please login to perform this action", code: 500 });
+            res.redirect("/");
+        }
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+app.get("/watch-history", async (req, res) => {
+    try {
+        if (req.session.userid) {
+            const User = await user.findOne({ _id: new ObjectId(req.session.userid) });
+            res.render("watch-history", { isAuthenticated: true, history: User.history });
+        }
+        else {
+            res.redirect("/");
+        }
+    } catch (error) {
+        console.log(error);
+    }
+})
+
 app.listen(PORT, (err) => {
     if (err) console.log(err);
     else console.log("Server is running on PORT : " + PORT);

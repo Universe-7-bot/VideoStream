@@ -1,0 +1,64 @@
+/* ----------------- watch history page ---------------- */
+.history-main-div {
+    min-height: 100vh;
+    width: 100%;
+}
+
+.history-video-card {
+    width: 18.5rem;
+    /* height: 5rem; */
+    border-radius: 4px;
+    background-color: white;
+    border: 1px solid rgb(84, 84, 84);
+    margin: 3rem;
+}
+
+.history-video-card-img {
+    border-radius: 4px 4px 0 0;
+}
+
+.history-video-card-body {
+    background-color: white;
+}
+
+.history-video-card-title {
+    margin: 0.3rem 0 0.1rem 0;
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.history-video-card-text {
+    margin: 0.1rem 0 0.1rem 0;
+    font-size: 13px;
+}
+
+.history-video-card-views {
+    margin: 0 0 0 0;
+    font-size: 12px;
+    color: rgb(148, 149, 154);
+    font-weight: 600;
+}
+
+.history-video-card-post {
+    margin: 0 0 0 0;
+    font-size: 12px;
+    color: rgb(148, 149, 154);
+    font-weight: 600;
+}
+
+.progress-sm {
+    height: 0.8rem !important;
+    border-radius: 4px !important;
+}
+
+.history-calendar-icon {
+    margin: 0.1rem 0.1rem 0 0.5rem;
+    height: 15px;
+    width: 15px;
+}
+
+.history-eye-icon {
+    margin: 0.1rem 0.1rem 0 0;
+    height: 15px;
+    width: 15px;
+}

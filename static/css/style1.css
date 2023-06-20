@@ -264,6 +264,28 @@
     width: 30px;
 }
 
+.history-icon {
+    height: 27px;
+    width: 27px;
+}
+
+.history-wrapper {
+    height: 2.5rem;
+    width: 7rem;
+    background-color: rgb(90, 59, 215, 0.4);
+    border-radius: 8rem;
+}
+
+.history-a {
+    text-decoration: none;
+    /* font-size: 17px; */
+    font-weight: bold;
+    color: white;
+}
+.history-a:hover {
+    color: white;
+}
+
 /* --------------------- index page --------------------- */
 .index-main-div {
     background-color: #160a4c;
@@ -301,14 +323,14 @@
 } */
 
 /* card */
-.card {
+.index-card {
     width: 18.5rem;
     border: none;
     border-radius: 1rem;
     /* height: 20rem; */
 }
 
-.card-img-top {
+.index-card-img-top {
     height: 15rem;
     width: 100%;
     border-radius: 1rem 1rem 0 0;
@@ -323,19 +345,19 @@
     font-weight: bold;
 }
 
-.card-body {
+.index-card-body {
     background-color: var(--card-bg);
 }
 
-.card-title {
+.index-card-title {
     color: white;
 }
 
-.card-text {
+.index-card-text {
     color: white;
 }
 
-.card-footer {
+.index-card-footer {
     background-color: var(--card-bg);
     padding: 0;
     border: none;
