@@ -2,6 +2,7 @@
 .history-main-div {
     min-height: 100vh;
     width: 100%;
+    background-color: rgb(250, 250, 250);
 }
 
 .history-video-card {
@@ -9,8 +10,9 @@
     /* height: 5rem; */
     border-radius: 4px;
     background-color: white;
-    border: 1px solid rgb(84, 84, 84);
+    border: none !important;
     margin: 3rem;
+    box-shadow: 0px 0px 15px rgb(207, 206, 206);
 }
 
 .history-video-card-img {
@@ -61,4 +63,50 @@
     margin: 0.1rem 0.1rem 0 0;
     height: 15px;
     width: 15px;
+}
+
+.history-play-icon {
+    height: 50px;
+    width: 50px;
+}
+
+.history-video-overlay {
+    transition: .5s ease;
+    opacity: 0;
+    position: absolute;
+    top: 29%;
+    left: 50%;
+    height: 59%;
+    width: 100%;
+    transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    background-color: rgba(0, 0, 0, 0.3);
+}
+
+.history-video-card:hover .history-video-overlay {
+    opacity: 1;
+}
+
+.history-video-time {
+    position: absolute;
+    top: 53.5%;
+    left: 90%;
+    transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    height: 1.2rem;
+    width: 2.8rem;
+    margin: 0 0 0 0;
+    background-color: rgb(220, 53, 69);
+    color: white;
+    font-weight: 600;
+    font-size: 12px;
+    border-radius: 2px;
+}
+
+.history-remove-icon {
+    height: 27px;
+    width: 27px;
+    position: absolute;
+    top: 1%;
+    left: 91%;
 }
