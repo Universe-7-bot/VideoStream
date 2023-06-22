@@ -17,6 +17,8 @@
 
 .history-video-card-img {
     border-radius: 4px 4px 0 0;
+    height: 12rem;
+    width: 100%;
 }
 
 .history-video-card-body {
@@ -74,13 +76,14 @@
     transition: .5s ease;
     opacity: 0;
     position: absolute;
-    top: 29%;
+    top: 31%;
     left: 50%;
-    height: 59%;
+    height: 61%;
     width: 100%;
     transform: translate(-50%, -50%);
     -ms-transform: translate(-50%, -50%);
     background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 4px 4px 0 0;
 }
 
 .history-video-card:hover .history-video-overlay {
@@ -109,4 +112,76 @@
     position: absolute;
     top: 1%;
     left: 91%;
+}
+
+/* ------------------ header ----------------- */
+.menu-icon {
+    height: 30px;
+    width: 30px;
+}
+
+/* ------------------- side navbar ------------------ */
+.side-navbar {
+    min-height: 100vh;
+    max-height: 100vh;
+    background-image: linear-gradient(to right, #42275a, #734b6d);
+    width: 15%;
+    transition: width 0.3s ease;
+}
+
+.side-navbar-collapse {
+    min-height: 100vh;
+    max-height: 100vh;
+    background-image: linear-gradient(to right, #42275a, #734b6d);
+    width: 6%;
+    transition: width 0.3s ease;
+}
+
+.sidenav-item {
+    width: 100%;
+    padding: 1rem;
+    text-decoration: none;
+    display: flex;
+    flex-direction: row;
+}
+
+.sidenav-item-collapse {
+    width: 100%;
+    padding: 1rem;
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.sidenav-item:hover {
+    background-color: rgb(159, 107, 151, 0.4);
+}
+
+.sidenav-text {
+    font-size: 16px;
+    font-weight: 500;
+    color: white;
+    margin: 0 0 0 0.5rem;
+}
+
+.sidenav-text-collapse {
+    font-size: 14px;
+    font-weight: 500;
+    color: white;
+    margin: 0.2rem 0 0 0;
+    text-align: center;
+}
+
+.sidenav-icon {
+    height: 23px;
+    width: 23px;
+    margin: 0 0 0 0.2rem;
+}
+
+.sidenav-icon-collapse {
+    height: 23px;
+    width: 23px;
+    margin: 0 0 0 1.1rem;
+    text-align: center;
 }

@@ -631,6 +631,9 @@ app.post("/save-history", (req, res) => {
                                     title: Video.title,
                                     watched: watched,
                                     thumbnail: Video.thumbnail,
+                                    category: Video.category,
+                                    views: Video.views,
+                                    createdAt: Video.createdAt,
                                     hours: Video.hours,
                                     minutes: Video.minutes,
                                     seconds: Video.seconds
