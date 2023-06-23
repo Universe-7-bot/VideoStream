@@ -652,7 +652,8 @@ app.post("/save-history", (req, res) => {
                             }]
                         }, {
                             $set: {
-                                "history.$.watched": watched
+                                "history.$.watched": watched,
+                                "history.$.views": Video.views
                             }
                         }).then(() => {
                             res.json({ msg: "History has been updated", code: 401 })
@@ -675,6 +676,35 @@ app.get("/watch-history", async (req, res) => {
         if (req.session.userid) {
             const User = await user.findOne({ _id: new ObjectId(req.session.userid) });
             res.render("watch-history", { isAuthenticated: true, history: User.history });
+        }
+        else {
+            res.redirect("/");
+        }
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+app.post("/delete-from-history", (req, res) => {
+    try {
+        if (req.session.userid) {
+            const { videoId } = req.body;
+            user.updateOne({
+                $and: [{
+                    _id: new ObjectId(req.session.userid)
+                }, {
+                    "history.videoId": videoId
+                }]
+            }, {
+                $pull: {
+                    history: {
+                        "videoId": videoId
+                    }
+                }
+            }).then(() => {
+                res.json({ msg: "successfully removed from watch history", code: 400 });
+                // res.redirect(req.originalUrl);
+            })
         }
         else {
             res.redirect("/");
