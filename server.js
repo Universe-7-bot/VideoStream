@@ -39,9 +39,17 @@ const PORT = process.env.PORT || 5000;
 
 app.get("/", async (req, res) => {
     try {
+        const User = await user.findOne({ _id: new ObjectId(req.session.userid) });
+        var activeNotifications = 0;
+        if (User) {
+            const notifications = User.notification;
+            for (var i = 0; i < notifications.length; i++) {
+                if (notifications[i].is_read == false) activeNotifications++;
+            }
+        }
         const videos = await video.find({}).sort({ createdAt: -1 }); //returns all the documents present in the video collection sorted in descending order according to createdAt field and stores it to an array which can be accessed by videos parameter
 
-        res.render("index", { isAuthenticated: req.session.userid ? true : false, videos: videos });
+        res.render("index", { isAuthenticated: req.session.userid ? true : false, videos: videos, notificationLength: activeNotifications });
     } catch (err) {
         console.log(err);
     }
@@ -129,12 +137,24 @@ app.get("/logout", (req, res) => {
     }
 })
 
-app.get("/upload", (req, res) => {
-    if (req.session.userid) { //authenticated user
-        res.render("upload", { isAuthenticated: true });
-    }
-    else {
-        res.redirect("/");
+app.get("/upload", async (req, res) => {
+    try {
+        if (req.session.userid) { //authenticated user
+            const User = await user.findOne({ _id: new ObjectId(req.session.userid) });
+            var activeNotifications = 0;
+            if (User) {
+                const notifications = User.notification;
+                for (var i = 0; i < notifications.length; i++) {
+                    if (notifications[i].is_read == false) activeNotifications++;
+                }
+            }
+            res.render("upload", { isAuthenticated: true, notificationLength: activeNotifications });
+        }
+        else {
+            res.redirect("/");
+        }
+    } catch (error) {
+        console.log(error);
     }
 })
 
@@ -237,6 +257,14 @@ app.post("/upload-video", async (req, res) => {
 app.get("/watch/:watch", async (req, res) => {
     try {
         if (req.session.userid) {
+            const User = await user.findOne({ _id: new ObjectId(req.session.userid) });
+            var activeNotifications = 0;
+            if (User) {
+                const notifications = User.notification;
+                for (var i = 0; i < notifications.length; i++) {
+                    if (notifications[i].is_read == false) activeNotifications++;
+                }
+            }
             const Video = await video.findOne({ watch: req.params.watch });
             if (Video) {
                 video.findByIdAndUpdate(Video._id, {
@@ -248,7 +276,7 @@ app.get("/watch/:watch", async (req, res) => {
                 }).catch((error) => {
                     console.log(error);
                 })
-                res.render("video-page", { isAuthenticated: req.session.userid ? true : false, video: Video });
+                res.render("video-page", { isAuthenticated: req.session.userid ? true : false, video: Video, notificationLength: activeNotifications });
             }
             else {
                 res.json({ msg: "Video does not exist", code: 500 });
@@ -675,7 +703,14 @@ app.get("/watch-history", async (req, res) => {
     try {
         if (req.session.userid) {
             const User = await user.findOne({ _id: new ObjectId(req.session.userid) });
-            res.render("watch-history", { isAuthenticated: true, history: User.history });
+            var activeNotifications = 0;
+            if (User) {
+                const notifications = User.notification;
+                for (var i = 0; i < notifications.length; i++) {
+                    if (notifications[i].is_read == false) activeNotifications++;
+                }
+            }
+            res.render("watch-history", { isAuthenticated: true, history: User.history, notificationLength: activeNotifications });
         }
         else {
             res.redirect("/");

@@ -44,7 +44,7 @@
                                         <div class="card-body history-video-card-body">
                                             <div class="progress progress-sm" role="progressbar" aria-label="Danger example" aria-valuenow="<%= Math.floor((video.watched / videoDuration) * 100) %>"
                                                 aria-valuemin="0" aria-valuemax="100">
-                                                <div class="progress-bar bg-danger"><%= minutes.padStart(2, "0") + ":" + seconds.padStart(2, "0") %></div>
+                                                <div class="progress-bar bg-danger"><%= minutes + ":" + seconds.padStart(2, "0") %></div>
                                             </div>
                                             <p class="history-video-card-title"><%= video.title %></p>
                                             <p class="history-video-card-text"><%= video.category %></p>

@@ -1,64 +1,45 @@
 <!-- navbar -->
-<nav class="navbar navbar-expand-lg">
-    <div class="container-fluid col-md-10">
+
+<div class="header-start d-flex flex-row">
+    <div class="side-navbar-menu d-flex align-items-center" id="side-navbar-menu">
         <img src="/images/menu-icon.svg" class="menu-icon" onclick="sidenavToggle()" alt="menu">
-        <a class="navbar-brand" href="#">
-            <p class="nav-website-name">VideoStream</p>
+    </div>
+    <div class="header-website d-flex align-items-center justify-content-center border border-dark">
+        <a href="/">
+            <p class="header-website-name">VideoStream</p>
         </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse d-flex justify-content-end" id="navbarSupportedContent">
-            <ul class="navbar-nav mb-2 mb-lg-0">
-                <% if (!isAuthenticated) { %>
-                    <li class="nav-item mx-2">
-                        <a class="nav-link nav-login-btn text-center" href="/login">Login</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link nav-signup-btn text-center" href="/signup">Signup</a>
-                    </li>
-                    <% } else { %>
-                        <li class="nav-item">
-                            <div class="history-wrapper d-flex flex-row align-items-center justify-content-center">
-                                <img src="/images/history-icon.svg" class="history-icon" alt="hsitory-icon">
-                                <a class="history-a" aria-current="page" href="/watch-history">History</a>
-                            </div>
-                        </li>
-                        <li class="nav-item dropdown mx-2">
-                            <button onclick="getNotifications()"
-                                class="dropdown-notification-btn dropdown-toggle d-flex align-items-center justify-content-center"
-                                data-bs-toggle="dropdown" aria-expanded="false">
-                                <img class="notification-icon" src="/images/notification-icon.svg" alt="notifications">
-                            </button>
-                            <ul class="dropdown-menu" id="unread-notifications">
+    </div>
+    <div class="header-search-bar border border-dark"></div>
+    <div class="header-upload border border-dark"></div>
+    <div class="header-notification d-flex align-items-center justify-content-center border border-dark">
+        <div class="header-notification-counter">
+            <%= notificationLength %>
+        </div>
+        <div class="dropdown header-notification-dropdown">
+            <button onclick="getNotifications()" class="header-notification-dropdown-btn" type="button" data-bs-toggle="dropdown"
+                aria-expanded="false">
+                <img src="/images/notification.svg" class="header-notification-icon" alt="notification">
+            </button>
+            <ul class="dropdown-menu" id="unread-notifications">
 
-                            </ul>
-                        </li>
-                        <li class="nav-item mx-2">
-                            <a class="nav-link nav-upload-btn text-center" href="/upload">Upload</a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a class="nav-link nav-logout-btn text-center" href="/logout">Logout</a>
-                        </li>
-                        <% } %>
             </ul>
         </div>
     </div>
-</nav>
-<!-- end navbar -->
-
+    <div class="header-myprofile border border-dark"></div>
+</div>
 <script>
 
     const sidenavToggle = () => {
         const sidenav = document.getElementById("sidenav");
+        const sidenavmenu = document.getElementById("side-navbar-menu");
         const sidenavItems = document.getElementsByClassName("sidenav-item");
         const sidenavTexts = document.getElementsByClassName("sidenav-text");
         const sidenavIcons = document.getElementsByClassName("sidenav-icon");
 
         sidenav.classList.toggle("side-navbar");
         sidenav.classList.toggle("side-navbar-collapse");
+        sidenavmenu.classList.toggle("side-navbar-menu");
+        sidenavmenu.classList.toggle("side-navbar-menu-collapse");
 
         for (let i = 0; i < sidenavItems.length; i++) {
             const sidenavItem = sidenavItems[i];
