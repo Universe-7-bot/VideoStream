@@ -1,9 +1,137 @@
 .sidenav-content {
     width: 100%;
+    padding: 0 0 0 0;
 }
 
 .content-wrapper {
+    position: absolute;
+    top: 3.5rem;
+    left: 15%;
     width: 85%;
+    margin: 0 0 0 0;
+    padding: 0 0 0 0 !important;
+    /* transition: width 0.3s ease; */
+}
+
+.content-wrapper-collapse {
+    position: absolute;
+    top: 3.5rem;
+    left: 6%;
+    width: 94%;
+    margin: 0 0 0 0;
+    padding: 0 0 0 0 !important;
+    /* transition: width 0.3s ease; */
+}
+
+/* --------------------- index page -------------------- */
+.index-main-div {
+    min-height: 100vh;
+    width: 100%;
+    background-color: rgb(250, 250, 250);
+}
+
+.index-row {
+    width: 100%;
+    padding: 2rem;
+    margin: 0 0 0 0 !important;
+    row-gap: 2rem;
+}
+
+.index-video-card {
+    width: 18.5rem;
+    /* height: 5rem; */
+    border-radius: 4px;
+    background-color: white;
+    border: none !important;
+    /* margin: 3rem; */
+    box-shadow: 0px 0px 15px rgb(207, 206, 206);
+}
+
+.index-video-card-img {
+    border-radius: 4px 4px 0 0;
+    height: 12rem;
+    width: 100%;
+}
+
+.index-video-card-body {
+    background-color: white;
+    /* padding-top: 0.8rem !important; */
+}
+
+.index-video-card-title {
+    margin: 0 0 0.1rem 0;
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.index-video-card-text {
+    margin: 0.1rem 0 0.1rem 0;
+    font-size: 13px;
+}
+
+.index-video-card-views {
+    margin: 0 0 0 0;
+    font-size: 12px;
+    color: rgb(148, 149, 154);
+    font-weight: 600;
+}
+
+.index-video-card-post {
+    margin: 0 0 0 0;
+    font-size: 12px;
+    color: rgb(148, 149, 154);
+    font-weight: 600;
+}
+
+.index-calendar-icon {
+    margin: 0.1rem 0.1rem 0 0.5rem;
+    height: 15px;
+    width: 15px;
+}
+
+.index-eye-icon {
+    margin: 0.1rem 0.1rem 0 0;
+    height: 15px;
+    width: 15px;
+}
+
+.index-play-icon {
+    height: 50px;
+    width: 50px;
+}
+
+.index-video-overlay {
+    transition: .5s ease;
+    opacity: 0;
+    position: absolute;
+    top: 30.7%;
+    left: 50%;
+    height: 61.1%;
+    width: 100%;
+    transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    background-color: rgba(0, 0, 0, 0.6);
+    border-radius: 4px 4px 0 0;
+}
+
+.index-video-card:hover .index-video-overlay {
+    opacity: 1;
+}
+
+.index-video-time {
+    position: absolute;
+    top: 56.5%;
+    left: 90%;
+    transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    height: 1.2rem;
+    width: 2.8rem;
+    margin: 0 0 0 0;
+    background-color: rgb(220, 53, 69);
+    color: white;
+    font-weight: 600;
+    font-size: 12px;
+    border-radius: 2px;
 }
 
 /* ----------------- watch history page ---------------- */
@@ -15,7 +143,9 @@
 
 .watch-history-row {
     width: 100%;
-    padding: 1rem;
+    padding: 2rem;
+    margin: 0 0 0 0 !important;
+    row-gap: 2rem;
 }
 
 .history-video-card {
@@ -89,13 +219,13 @@
     transition: .5s ease;
     opacity: 0;
     position: absolute;
-    top: 31%;
+    top: 29.2%;
     left: 50%;
-    height: 61%;
+    height: 58.5%;
     width: 100%;
     transform: translate(-50%, -50%);
     -ms-transform: translate(-50%, -50%);
-    background-color: rgba(0, 0, 0, 0.3);
+    background-color: rgba(0, 0, 0, 0.6);
     border-radius: 4px 4px 0 0;
 }
 
@@ -129,6 +259,9 @@
 
 /* ------------------ header ----------------- */
 .header-start {
+    position: sticky;
+    top: 0;
+    z-index: 1;
     height: 3.5rem;
     width: 100%;
     background-color: white;
@@ -179,6 +312,22 @@
     width: 10%;
 }
 
+.header-upload-btn {
+    border: none;
+    background-color: white;
+}
+
+.header-upload-btn-text {
+    margin: 0 0 0 0.1rem;
+    color: rgb(104, 102, 102);
+    font-size: 14px;
+}
+
+.header-add-icon {
+    height: 20px;
+    width: 20px;
+}
+
 .header-notification {
     width: 5%;
 }
@@ -216,6 +365,9 @@
 
 /* ------------------- side navbar ------------------ */
 .side-navbar {
+    position: fixed;
+    top: 3.5rem;
+    /* z-index: 1; */
     min-height: 100vh;
     max-height: 100vh;
     background-image: linear-gradient(to right, #42275a, #734b6d);
@@ -224,6 +376,8 @@
 }
 
 .side-navbar-collapse {
+    position: fixed;
+    top: 3.5rem;
     min-height: 100vh;
     max-height: 100vh;
     background-image: linear-gradient(to right, #42275a, #734b6d);

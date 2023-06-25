@@ -12,65 +12,65 @@
 </head>
 
 <body>
-  <% if (!isAuthenticated) { %>
+    <% baseUrl="http://localhost:3000/" %>
+    <% const months=["January", "February" , "March" , "April" , "May" , "June" , "July" , "August" , "September"
+        , "October" , "November" , "December" ]; %>
     <div class="index-main-div">
       <%- include("components/header.ejs") %>
       <div class="sidenav-content d-flex flex-row">
         <%- include("components/side-navbar.ejs") %>
-        <div class="content-wrapper">
+        <div class="content-wrapper" id="content-wrapper">
           <div class="row index-row">
-            <div class="col-md-6 index-col-1 d-flex align-items-center justify-content-center">
-              <div class="index-div-text">
-                <p class="heading1">Welcome to</p>
-                <p class="heading2">Video Streaming</p>
-                <p class="index-text">Discover and share your passion for videos with millions of viewers worldwide. Create your
-                  own channel and showcase your talent to the world. Experience the power of visual storytelling on our platform.
-                </p>
-                <button class="index-btn">Get Started</button>
-              </div>
-            </div>
-            <div class="col-md-6 index-col-2 d-flex align-items-center justify-content-center">
-              <img class="index-img" src="images/home2.svg" alt="home">
-            </div>
+            <% videos.forEach((video)=> { %>
+              <% var createdAt=new Date(video.createdAt); var date=createdAt.getDate() + "" ; date=date.padStart(2, "0" ) + " " +
+                months[createdAt.getMonth()] + ", " + createdAt.getFullYear(); %>
+                <div class="col-md-3 d-flex justify-content-center">
+                  <% var videoDuration=video.hours * 3600 + video.minutes * 60 + video.seconds %>
+                    <% var hours=Math.floor(video.watched / 3600) + "" ; var minutes=Math.floor((video.watched - hours * 3600) / 60)
+                      + "" ; var seconds=video.watched - hours * 3600 - minutes * 60 + "" ; var videoHours=video.hours + "" ; var
+                      videoSeconds=video.seconds + "" ; var videoMinutes=video.minutes + "" ; %>
+                      <div class="card index-video-card">
+                        <div class="index-video-overlay d-flex align-items-center justify-content-center">
+                          <img src="/images/play-icon.svg" class="index-play-icon" alt="play-icon" onclick="goToWatchVideo(this)"
+                            data-watch="<%= video.watch %>">
+                        </div>
+                        <p class="index-video-time d-flex align-items-center justify-content-center">
+                          <%= videoHours + ":" + videoMinutes.padStart(2, "0" ) + ":" + videoSeconds.padStart(2, "0" ) %>
+                        </p>
+                        <img src="<%= baseUrl + video.thumbnail.substring(7) %>" class="card-img-top index-video-card-img"
+                          alt="index">
+                        <div class="card-body index-video-card-body">
+                          <p class="index-video-card-title">
+                            <%= video.title %>
+                          </p>
+                          <p class="index-video-card-text">
+                            <%= video.category %>
+                          </p>
+                          <div class="d-flex flex-row">
+                            <img src="/images/history-eye.svg" class="index-eye-icon" alt="eye-icon">
+                            <p class="history-video-card-views">
+                              <%= video.views %> views
+                            </p>
+                            <img src="/images/calendar-icon.svg" class="index-calendar-icon" alt="calendar-icon">
+                            <p class="index-video-card-post">
+                              <%= date %>
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                </div>
+                <% }) %>
           </div>
         </div>
       </div>
     </div>
-    <% } else { %>
-      <div class="index-main-div-auth">
-        <%- include("components/header.ejs") %>
-        <div class="sidenav-content d-flex flex-row">
-          <%- include("components/side-navbar.ejs") %>
-            <div class="content-wrapper">
-                  <div class="row index-main-div-auth-row">
-                    <% videos.forEach((video)=> { %>
-                      <div class="col-md-3 index-main-div-auth-col d-flex align-items-center justify-content-center">
-                        <div class="card index-card">
-                          <img src="<%= video.thumbnail.substring(7) %>" class="card-img-top index-card-img-top" alt="video-thumbnail">
-                          <p class="video-duration">
-                            <%= video.hours + ":" + video.minutes + ":" + video.seconds %>
-                          </p>
-                          <div class="card-body index-card-body">
-                            <h5 class="card-title index-card-title">
-                              <%= video.title %>
-                            </h5>
-                            <p class="card-text index-card-text">
-                              <%= video.category %>
-                            </p>
-                          </div>
-                          <div class="card-footer index-card-footer">
-                            <a href="/watch/<%= video.watch %>" class="btn watch-btn"><img class="watch-video-icon mx-1"
-                                src="images/watch-video-icon.svg">Watch here</a>
-                          </div>
-                        </div>
-                      </div>
-                      <% }) %>
-                  </div>
-            </div>
-        </div>
-      </div>
-      <% } %>
     <%- include("components/footer.ejs") %>
+    <script>
+      const goToWatchVideo = (element) => {
+          const watch = element.getAttribute("data-watch");
+          window.location.href = `/watch/${watch}`;
+        };
+    </script>
       <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
         crossorigin="anonymous"></script>

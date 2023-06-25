@@ -287,13 +287,14 @@
 }
 
 /* --------------------- index page --------------------- */
-.index-main-div {
+/* .index-main-div {
     background-color: #160a4c;
     width: 100%;
 }
 
 .index-row {
     width: 100%;
+    margin: 0 0 0 0;
 }
 
 .index-col-1 {
@@ -304,7 +305,7 @@
 .index-col-2 {
     height: 42.2rem;
     width: 50%;
-}
+} */
 
 .index-main-div-auth {
     height: auto;

@@ -18,7 +18,7 @@
             <%- include("components/header.ejs") %>
                 <div class="sidenav-content d-flex flex-row">
                     <%- include("components/side-navbar.ejs") %>
-                        <div class="content-wrapper d-flex flex-row">
+                        <div class="content-wrapper d-flex flex-row" id="content-wrapper">
                             <div class="video-wrapper">
                                 <input type="hidden" id="videoId" value="<%= video._id %>">
                                 <input type="hidden" id="category" value="<%= video.category %>">

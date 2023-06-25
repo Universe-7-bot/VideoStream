@@ -19,7 +19,7 @@
         <%- include("components/header.ejs") %>
             <div class="sidenav-content d-flex flex-row">
                 <%- include("components/side-navbar.ejs") %>
-                    <div class="content-wrapper">
+                    <div class="content-wrapper" id="content-wrapper">
                         <div class="row watch-history-row">
                             <% history.forEach((video) => { %>
                                 <% var createdAt=new Date(video.createdAt); var date=createdAt.getDate() + "" ; date=date.padStart(2, "0" ) + " " +
