@@ -9,33 +9,38 @@
         integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     <link rel="stylesheet" type="text/css" href="/css/style1.css">
+    <link rel="stylesheet" type="text/css" href="/css/style2.css">
 </head>
 
 <body>
-    <%- include("components/header.ejs") %>
-        <div class="upload-main-div">
-            <div class="row upload-row">
-                <div class="col-md-6 upload-col-1 d-flex align-items-center justify-content-center">
-                    <div class="upload-wrapper">
-                        <p class="upload-header text-center">Upload your video here</p>
-                        <p class="upload-sub-heading"><img class="circle-icon" src="images/circle.svg"
-                                alt="cicle">Select video</p>
-                        <div class="row row-1">
-                            <div class="col-md-6">
-                                <div id="drag-drop-zone">
-                                    <img class="upload-icon" src="images/upload-icon.svg" alt="upload-icon">
-                                    <p class="drag-drop-text">Drag and drop video file here or</p>
-                                    <button id="upload-button">Upload</button>
-                                    <form>
-                                        <input type="file" name="video" id="file-input" accept="video/*" multiple>
-                                    </form>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div id="video-wrapper"></div>
-                            </div>
-                        </div>
-                        <p class="upload-sub-heading"><img class="circle-icon" src="images/circle.svg"
+    <div class="upload-main-div">
+        <%- include("components/header.ejs") %>
+            <div class="sidenav-content d-flex flex-row">
+                <%- include("components/side-navbar.ejs") %>
+                    <div class="content-wrapper" id="content-wrapper">
+                        <div class="row upload-row">
+                            <div class="col-md-6 upload-col-1 d-flex align-items-center justify-content-center">
+                                <div class="upload-wrapper">
+                                    <p class="upload-header text-center">Upload your video here</p>
+                                    <p class="upload-sub-heading"><img class="circle-icon" src="images/circle.svg"
+                                            alt="cicle">Select video</p>
+                                    <div class="row row-1">
+                                        <div class="col-md-6">
+                                            <div id="drag-drop-zone">
+                                                <img class="upload-icon" src="images/upload-icon.svg" alt="upload-icon">
+                                                <p class="drag-drop-text">Drag and drop video file here or</p>
+                                                <button id="upload-button">Upload</button>
+                                                <form>
+                                                    <input type="file" name="video" id="file-input" accept="video/*"
+                                                        multiple>
+                                                </form>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div id="video-wrapper"></div>
+                                        </div>
+                                    </div>
+                                    <p class="upload-sub-heading"><img class="circle-icon" src="images/circle.svg"
                                 alt="cicle">Select thumbnail</p>
                         <div class="row">
                             <div class="col-md-6">
@@ -53,13 +58,13 @@
                                 <div id="image-wrapper"></div>
                             </div>
                         </div>
-                    </div>
-                </div>
-                <div class="col-md-6 upload-col-2 d-flex align-items-center justify-content-center">
-                    <img class="upload-img" src="images/upload1.svg" alt="home">
-                </div>
-            </div>
-            <div class="row upload-row">
+                                </div>
+                            </div>
+                            <!-- <div class="col-md-6 upload-col-2 d-flex align-items-center justify-content-center">
+        <img class="upload-img" src="images/upload1.svg" alt="home">
+    </div> -->
+                        </div>
+                        <!-- <div class="row upload-row">
                 <div class="col-md-6 upload-col-1 d-flex align-items-center justify-content-center">
                     <img class="upload-img-2" src="images/upload2.svg" alt="home">
                 </div>
@@ -90,143 +95,147 @@
                         <button onclick="upload()" class="upload-btn">Submit</button>
                     </div>
                 </div>
+            </div> -->
+                    </div>
             </div>
-        </div>
-        <%- include("components/footer.ejs") %>
-            <script>
-                const dragDropZone = document.getElementById("drag-drop-zone");
-                const dragDropText = document.querySelector(".drag-drop-text");
-                const uploadButton = document.getElementById("upload-button");
-                const fileInput = document.getElementById("file-input");
+    </div>
+    <%- include("components/footer.ejs") %>
+        <script>
+            const dragDropZone = document.getElementById("drag-drop-zone");
+            const dragDropText = document.querySelector(".drag-drop-text");
+            const uploadButton = document.getElementById("upload-button");
+            const fileInput = document.getElementById("file-input");
 
-                const dragDropZoneImg = document.getElementById("drag-drop-zone-img");
-                const uploadButtonImg = document.getElementById("upload-button-img");
-                const fileInputImg = document.getElementById("file-input-img");
+            const dragDropZoneImg = document.getElementById("drag-drop-zone-img");
+            const uploadButtonImg = document.getElementById("upload-button-img");
+            const fileInputImg = document.getElementById("file-input-img");
 
-                let video, thumbnail;
+            let video, thumbnail;
 
-                dragDropZone.addEventListener("dragover", (event) => {
-                    event.preventDefault();
-                    dragDropZone.classList.add("drag-over");
-                });
+            dragDropZone.addEventListener("dragover", (event) => {
+                event.preventDefault();
+                dragDropZone.classList.add("drag-over");
+            });
 
-                dragDropZone.addEventListener("dragleave", () => {
-                    dragDropZone.classList.remove("drag-over");
-                });
+            dragDropZone.addEventListener("dragleave", () => {
+                dragDropZone.classList.remove("drag-over");
+            });
 
-                dragDropZoneImg.addEventListener("dragleave", () => {
-                    dragDropZoneImg.classList.remove("drag-over");
-                });
+            dragDropZoneImg.addEventListener("dragleave", () => {
+                dragDropZoneImg.classList.remove("drag-over");
+            });
 
-                dragDropZone.addEventListener("drop", (event) => {
-                    event.preventDefault();
-                    dragDropZone.classList.remove("drag-over");
-                    const files = event.dataTransfer.files;
-                    handleFiles(files);
-                });
+            dragDropZone.addEventListener("drop", (event) => {
+                event.preventDefault();
+                dragDropZone.classList.remove("drag-over");
+                const files = event.dataTransfer.files;
+                handleFiles(files);
+            });
 
-                fileInput.addEventListener("change", (event) => {
-                    const files = event.target.files;
-                    handleFiles(files);
-                });
+            fileInput.addEventListener("change", (event) => {
+                const files = event.target.files;
+                handleFiles(files);
+            });
 
-                uploadButton.addEventListener("click", () => {
-                    fileInput.click();
-                });
+            uploadButton.addEventListener("click", () => {
+                fileInput.click();
+            });
 
-                dragDropZoneImg.addEventListener("dragover", (event) => {
-                    event.preventDefault();
-                    dragDropZoneImg.classList.add("drag-over");
-                });
+            dragDropZoneImg.addEventListener("dragover", (event) => {
+                event.preventDefault();
+                dragDropZoneImg.classList.add("drag-over");
+            });
 
-                dragDropZoneImg.addEventListener("dragleave", () => {
-                    dragDropZoneImg.classList.remove("drag-over");
-                });
+            dragDropZoneImg.addEventListener("dragleave", () => {
+                dragDropZoneImg.classList.remove("drag-over");
+            });
 
-                dragDropZoneImg.addEventListener("drop", (event) => {
-                    event.preventDefault();
-                    dragDropZoneImg.classList.remove("drag-over");
-                    const imgFiles = event.dataTransfer.files;
-                    handleImages(imgFiles);
-                });
+            dragDropZoneImg.addEventListener("drop", (event) => {
+                event.preventDefault();
+                dragDropZoneImg.classList.remove("drag-over");
+                const imgFiles = event.dataTransfer.files;
+                handleImages(imgFiles);
+            });
 
-                fileInputImg.addEventListener("change", (event) => {
-                    const imgFiles = event.target.files;
-                    handleImages(imgFiles);
-                });
+            fileInputImg.addEventListener("change", (event) => {
+                const imgFiles = event.target.files;
+                handleImages(imgFiles);
+            });
 
-                uploadButtonImg.addEventListener("click", () => {
-                    fileInputImg.click();
-                });
+            uploadButtonImg.addEventListener("click", () => {
+                fileInputImg.click();
+            });
 
-                function handleFiles(files) {
-                    const videoWrapper = document.getElementById("video-wrapper");
-                    videoWrapper.style.display = "block";
+            function handleFiles(files) {
+                const videoWrapper = document.getElementById("video-wrapper");
+                videoWrapper.style.display = "block";
 
-                    const existingVideoElement = document.querySelector(".uploaded-video");
-                    if (existingVideoElement) {
-                        existingVideoElement.remove();
-                    }
-
-                    for (let i = 0; i < files.length; i++) {
-                        const file = files[i];
-                        const fileType = file.type.split("/")[0];
-                        if (fileType === "video") {
-                            video = file;
-                            const videoElement = document.createElement("video");
-                            videoElement.src = URL.createObjectURL(file);
-                            videoElement.controls = true;
-                            videoElement.classList.add("uploaded-video");
-                            videoWrapper.appendChild(videoElement);
-                            break;
-                        }
-                    }
+                const existingVideoElement = document.querySelector(".uploaded-video");
+                if (existingVideoElement) {
+                    existingVideoElement.remove();
                 }
 
-                function handleImages(files) {
-                    const imageWrapper = document.getElementById("image-wrapper");
-                    imageWrapper.style.display = "block";
-
-                    const existingImageElement = document.querySelector(".uploaded-image");
-                    if (existingImageElement) {
-                        existingImageElement.remove();
-                    }
-
-                    for (let i = 0; i < files.length; i++) {
-                        const file = files[i];
-                        const fileType = file.type.split("/")[0];
-                        if (fileType === "image") {
-                            thumbnail = file;
-                            const imageElement = document.createElement("img");
-                            imageElement.src = URL.createObjectURL(file);
-                            imageElement.classList.add("uploaded-image");
-                            imageWrapper.appendChild(imageElement);
-                            break;
-                        }
+                for (let i = 0; i < files.length; i++) {
+                    const file = files[i];
+                    const fileType = file.type.split("/")[0];
+                    if (fileType === "video") {
+                        video = file;
+                        const videoElement = document.createElement("video");
+                        videoElement.src = URL.createObjectURL(file);
+                        videoElement.controls = true;
+                        videoElement.classList.add("uploaded-video");
+                        videoWrapper.appendChild(videoElement);
+                        break;
                     }
                 }
+            }
 
-                const upload = () => {
-                    if (!video)
-                        video = document.getElementById("file-input").files[0];
-                    if (!thumbnail)
-                        thumbnail = document.getElementById("file-input-img").files[0];
+            function handleImages(files) {
+                const imageWrapper = document.getElementById("image-wrapper");
+                imageWrapper.style.display = "block";
 
-                    const title = document.getElementById("title").value;
-                    const description = document.getElementById("description").value;
-                    const tags = document.getElementById("tags").value;
-                    const category = document.getElementById("category").value;
+                const existingImageElement = document.querySelector(".uploaded-image");
+                if (existingImageElement) {
+                    existingImageElement.remove();
+                }
 
-                    const formData = new FormData();
-                    formData.append("video", video),
-                        formData.append("thumbnail", thumbnail),
-                        formData.append("title", title),
-                        formData.append("description", description),
-                        formData.append("tags", tags),
-                        formData.append("category", category),
-                        // console.log(video, thumbnail, title, description, tags, category);
+                for (let i = 0; i < files.length; i++) {
+                    const file = files[i];
+                    const fileType = file.type.split("/")[0];
+                    if (fileType === "image") {
+                        thumbnail = file;
+                        const imageElement = document.createElement("img");
+                        imageElement.src = URL.createObjectURL(file);
+                        imageElement.classList.add("uploaded-image");
+                        imageWrapper.appendChild(imageElement);
+                        break;
+                    }
+                }
+            }
 
-                    fetch("http://localhost:3000/upload-video", { method: "POST", body: formData }).then((res) => {
+            const upload = () => {
+                if (!video)
+                    video = document.getElementById("file-input").files[0];
+                if (!thumbnail)
+                    thumbnail = document.getElementById("file-input-img").files[0];
+
+                const title = document.getElementById("title").value;
+                const description = document.getElementById("description").value;
+                const tags = document.getElementById("tags").value;
+                const category = document.getElementById("category").value;
+
+                const formData = new FormData();
+                formData.append("video", video),
+                    formData.append("thumbnail", thumbnail),
+                    formData.append("title", title),
+                    formData.append("description", description),
+                    formData.append("tags", tags),
+                    formData.append("category", category),
+                    // console.log(video, thumbnail, title, description, tags, category);
+
+                    fetch("http://localhost:3000/upload-video", {
+                        method: "POST", body: formData
+                    }).then((res) => {
                         return res.json();
                     }).then((f_res) => {
                         if (f_res.code == 500) {
@@ -235,8 +244,8 @@
                                 duration: 2000,
                                 newWindow: true,
                                 close: true,
-                                gravity: "top", 
-                                position: "right", 
+                                gravity: "top",
+                                position: "right",
                                 stopOnFocus: true,
                                 avatar: "images/error-icon.svg",
                                 style: {
@@ -266,12 +275,12 @@
                             }, 1500)
                         }
                     })
-                };
-            </script>
-            <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
-            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
-                integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
-                crossorigin="anonymous"></script>
+            };
+        </script>
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
+            crossorigin="anonymous"></script>
 </body>
 
 </html>
