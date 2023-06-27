@@ -10,6 +10,52 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     <link rel="stylesheet" type="text/css" href="/css/style1.css">
     <link rel="stylesheet" type="text/css" href="/css/style2.css">
+    <style>
+        .progress {
+            width: 95%;
+            height: 0.9rem;
+            background-color: rgb(240, 205, 205);
+        }
+
+        .upload-video-progress-bar-text {
+            margin: 0.2rem 0 0 0;
+            font-size: 13px;
+            color: rgb(127, 123, 123);
+        }
+
+        .progress-bar-animated-custom {
+            animation: progress-animation 4s forwards;
+        }
+
+        @keyframes progress-animation {
+            0% {
+                width: 0;
+            }
+
+            30% {
+                width: 30%;
+                animation-timing-function: ease-in;
+            }
+
+            70% {
+                width: 70%;
+                animation-timing-function: ease-in;
+            }
+
+            100% {
+                width: 100%;
+            }
+        }
+
+        .progress-bar-percentage {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #1a1a1a;
+            font-weight: bold;
+        }
+    </style>
 </head>
 
 <body>
@@ -19,83 +65,99 @@
                 <%- include("components/side-navbar.ejs") %>
                     <div class="content-wrapper" id="content-wrapper">
                         <div class="row upload-row">
-                            <div class="col-md-6 upload-col-1 d-flex align-items-center justify-content-center">
-                                <div class="upload-wrapper">
-                                    <p class="upload-header text-center">Upload your video here</p>
-                                    <p class="upload-sub-heading"><img class="circle-icon" src="images/circle.svg"
-                                            alt="cicle">Select video</p>
-                                    <div class="row row-1">
-                                        <div class="col-md-6">
-                                            <div id="drag-drop-zone">
-                                                <img class="upload-icon" src="images/upload-icon.svg" alt="upload-icon">
-                                                <p class="drag-drop-text">Drag and drop video file here or</p>
-                                                <button id="upload-button">Upload</button>
-                                                <form>
-                                                    <input type="file" name="video" id="file-input" accept="video/*"
-                                                        multiple>
-                                                </form>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div id="video-wrapper"></div>
+                            <div class="upload-header">
+                                <p class="upload-header-title">Upload Details</p>
+                            </div>
+                            <div class="upload-video-div d-flex flex-row">
+                                <div class="upload-show-video" id="video-wrapper">
+                                    <div class="upload-show-video-before" id="upload-show-video-before">
+                                        <img class="preview-video-icon" src="/images/preview-video.svg"
+                                            alt="video-icon">
+                                        <p class="upload-show-video-text">Your video will show here</p>
+                                    </div>
+                                </div>
+                                <div class="upload-dragdrop" id="drag-drop-zone">
+                                    <img class="upload-icon" src="/images/upload.svg" alt="upload-icon">
+                                    <p class="drag-drop-text">Drag and drop video file here or</p>
+                                    <button id="upload-button">Browse Video</button>
+                                    <form>
+                                        <input type="file" name="video" id="file-input" accept="video/*" multiple>
+                                    </form>
+                                </div>
+                                <div class="upload-video-progress" id="upload-video-progress">
+                                    <div class="progress video-progress" role="progressbar" aria-label="Example with label"
+                                        aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
+                                        <div class="progress-bar video-progress-bar progress-bar-striped progress-bar-animated progress-bar-animated-custom bg-danger"
+                                            style="width: 0%">
+                                            <span class="progress-bar-percentage">0%</span>
                                         </div>
                                     </div>
-                                    <p class="upload-sub-heading"><img class="circle-icon" src="images/circle.svg"
-                                alt="cicle">Select thumbnail</p>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div id="drag-drop-zone-img">
-                                    <img class="upload-icon" src="images/upload-icon.svg" alt="upload-icon">
+                                    <p class="upload-video-progress-bar-text">your video is uploading...</p>
+                                </div>
+                            </div>
+                            <div class="upload-image-div d-flex flex-row">
+                                <div class="upload-show-image" id="image-wrapper">
+                                    <div class="upload-show-image-before" id="upload-show-image-before">
+                                        <img class="preview-image-icon" src="/images/preview-image.svg"
+                                            alt="image-icon">
+                                        <p class="upload-show-image-text">Your thumbnail will show here</p>
+                                    </div>
+                                </div>
+                                <div class="upload-dragdrop-img" id="drag-drop-zone-img">
+                                    <img class="upload-icon" src="/images/upload.svg" alt="upload-icon">
                                     <p class="drag-drop-text">Drag and drop image file here or</p>
-                                    <button id="upload-button-img">Upload</button>
+                                    <button id="upload-button-img">Browse Image</button>
                                     <form>
                                         <input type="file" name="thumbnail" id="file-input-img" accept="image/*"
                                             multiple>
                                     </form>
                                 </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div id="image-wrapper"></div>
-                            </div>
-                        </div>
+                                <div class="upload-image-progress" id="upload-image-progress">
+                                    <div class="progress image-progress" role="progressbar" aria-label="Example with label"
+                                        aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
+                                        <div class="progress-bar image-progress-bar progress-bar-striped progress-bar-animated progress-bar-animated-custom bg-danger"
+                                            style="width: 0%">
+                                            <span class="progress-bar-percentage">0%</span>
+                                        </div>
+                                    </div>
+                                    <p class="upload-video-progress-bar-text">your thumbnail is uploading...</p>
                                 </div>
                             </div>
-                            <!-- <div class="col-md-6 upload-col-2 d-flex align-items-center justify-content-center">
-        <img class="upload-img" src="images/upload1.svg" alt="home">
-    </div> -->
+                            <div class="upload-separator">
+                                <hr>
+                            </div>
+                            <div class="upload-video-details-wrapper">
+                                <form>
+                                    <div class="upload-video-title">
+                                        <p class="upload-video-common-text">Video Title</p>
+                                        <input type="text" name="title" class="upload-input" id="title"
+                                            placeholder="e.g. my first video">
+                                    </div>
+                                    <div class="upload-video-description">
+                                        <p class="upload-video-common-text">Video Description</p>
+                                        <textarea class="upload-input" id="description" rows="4"
+                                            placeholder="Description"></textarea>
+                                    </div>
+                                    <div class="upload-video-tags">
+                                        <p class="upload-video-common-text">Video Tags</p>
+                                        <input type="text" name="tags" class="upload-input" id="tags"
+                                            placeholder="e.g. #gaming, #viral">
+                                    </div>
+                                    <div class="upload-video-category">
+                                        <p class="upload-video-common-text">Video Category</p>
+                                        <select class="form-select" id="category" aria-label="Default select example">
+                                            <option value="Technology">Technology</option>
+                                            <option value="Gaming">Gaming</option>
+                                            <option value="Education">Education</option>
+                                            <option value="Entertainment">Entertainment</option>
+                                        </select>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="upload-submit-btn-div">
+                                <button onclick="upload()" class="upload-submit-btn">Submit</button>
+                            </div>
                         </div>
-                        <!-- <div class="row upload-row">
-                <div class="col-md-6 upload-col-1 d-flex align-items-center justify-content-center">
-                    <img class="upload-img-2" src="images/upload2.svg" alt="home">
-                </div>
-                <div class="col-md-6 upload-col-2 d-flex align-items-center justify-content-center">
-                    <div class="upload-wrapper-2">
-                        <form>
-                            <p class="upload-sub-heading"><img class="circle-icon" src="images/circle.svg"
-                                    alt="cicle">Select title</p>
-                            <input type="text" name="title" class="form-control upload-input" id="title"
-                                placeholder="title">
-                            <p class="upload-sub-heading"><img class="circle-icon" src="images/circle.svg"
-                                    alt="cicle">Select description</p>
-                            <textarea class="form-control upload-input" id="description" rows="3"
-                                placeholder="description"></textarea>
-                            <p class="upload-sub-heading"><img class="circle-icon" src="images/circle.svg"
-                                    alt="cicle">Select tags</p>
-                            <input type="text" name="tags" class="form-control upload-input" id="tags"
-                                placeholder="tags">
-                            <p class="upload-sub-heading"><img class="circle-icon" src="images/circle.svg"
-                                    alt="cicle">Select category</p>
-                            <select class="form-select" id="category" aria-label="Default select example">
-                                <option value="Technology">Technology</option>
-                                <option value="Gaming">Gaming</option>
-                                <option value="Education">Education</option>
-                                <option value="Entertainment">Entertainment</option>
-                            </select>
-                        </form>
-                        <button onclick="upload()" class="upload-btn">Submit</button>
-                    </div>
-                </div>
-            </div> -->
                     </div>
             </div>
     </div>
@@ -105,10 +167,14 @@
             const dragDropText = document.querySelector(".drag-drop-text");
             const uploadButton = document.getElementById("upload-button");
             const fileInput = document.getElementById("file-input");
+            const videoWrapper = document.getElementById("video-wrapper");
+            const videoPreviewBefore = document.getElementById("upload-show-video-before");
 
             const dragDropZoneImg = document.getElementById("drag-drop-zone-img");
             const uploadButtonImg = document.getElementById("upload-button-img");
             const fileInputImg = document.getElementById("file-input-img");
+            const imageWrapper = document.getElementById("image-wrapper");
+            const imagePreviewBefore = document.getElementById("upload-show-image-before");
 
             let video, thumbnail;
 
@@ -119,10 +185,6 @@
 
             dragDropZone.addEventListener("dragleave", () => {
                 dragDropZone.classList.remove("drag-over");
-            });
-
-            dragDropZoneImg.addEventListener("dragleave", () => {
-                dragDropZoneImg.classList.remove("drag-over");
             });
 
             dragDropZone.addEventListener("drop", (event) => {
@@ -166,43 +228,77 @@
                 fileInputImg.click();
             });
 
-            function handleFiles(files) {
-                const videoWrapper = document.getElementById("video-wrapper");
-                videoWrapper.style.display = "block";
+            async function handleFiles(files) {
+                const videoProgress = document.getElementById("upload-video-progress");
+                const progressBar = document.querySelector(".video-progress-bar");
+                var percentage = 0;
+                var interval = 40;
+                var uploaded = false;
+                // videoWrapper.style.display = "block";
+                // videoPreviewBefore.style.display = "none";
 
                 const existingVideoElement = document.querySelector(".uploaded-video");
                 if (existingVideoElement) {
                     existingVideoElement.remove();
+                    videoPreviewBefore.style.display = "flex";
                 }
 
                 for (let i = 0; i < files.length; i++) {
                     const file = files[i];
                     const fileType = file.type.split("/")[0];
                     if (fileType === "video") {
+                        uploaded = true;
                         video = file;
                         const videoElement = document.createElement("video");
                         videoElement.src = URL.createObjectURL(file);
                         videoElement.controls = true;
+                        // videoElement.autoplay = true;
                         videoElement.classList.add("uploaded-video");
                         videoWrapper.appendChild(videoElement);
                         break;
                     }
                 }
+
+                if (uploaded) {
+                    dragDropZone.style.display = "none";
+                    videoProgress.style.display = "flex";
+                    var uploadedVideo = document.querySelector(".uploaded-video");
+
+                    var progressAnimation = await setInterval(function () {
+                        percentage += 1;
+                        progressBar.style.width = percentage + "%";
+                        progressBar.textContent = percentage + "%";
+                        if (percentage >= 100) {
+                            clearInterval(progressAnimation);
+                            videoPreviewBefore.style.display = "none";
+                            videoProgress.style.display = "none";
+                            dragDropZone.style.display = "flex";
+                            uploadedVideo.style.display = "block"
+                            // uploadedVideo.setAttribute("autoplay", "true");
+                        }
+                    }, interval);
+                }
             }
 
-            function handleImages(files) {
-                const imageWrapper = document.getElementById("image-wrapper");
-                imageWrapper.style.display = "block";
+            async function handleImages(files) {
+                const imageProgress = document.getElementById("upload-image-progress");
+                const progressBar = document.querySelector(".image-progress-bar");
+                var percentage = 0;
+                var interval = 40;
+                var uploaded = false;
+                // imageWrapper.style.display = "block";
 
                 const existingImageElement = document.querySelector(".uploaded-image");
                 if (existingImageElement) {
                     existingImageElement.remove();
+                    imagePreviewBefore.style.display = "flex";
                 }
 
                 for (let i = 0; i < files.length; i++) {
                     const file = files[i];
                     const fileType = file.type.split("/")[0];
                     if (fileType === "image") {
+                        uploaded = true;
                         thumbnail = file;
                         const imageElement = document.createElement("img");
                         imageElement.src = URL.createObjectURL(file);
@@ -210,6 +306,26 @@
                         imageWrapper.appendChild(imageElement);
                         break;
                     }
+                }
+
+                 if (uploaded) {
+                    dragDropZoneImg.style.display = "none";
+                    imageProgress.style.display = "flex";
+                    var uploadedImage = document.querySelector(".uploaded-image");
+
+                    var progressAnimation = await setInterval(function () {
+                        percentage += 1;
+                        progressBar.style.width = percentage + "%";
+                        progressBar.textContent = percentage + "%";
+                        if (percentage >= 100) {
+                            clearInterval(progressAnimation);
+                            imagePreviewBefore.style.display = "none";
+                            imageProgress.style.display = "none";
+                            dragDropZoneImg.style.display = "flex";
+                            uploadedImage.style.display = "block"
+                            // uploadedImage.setAttribute("autoplay", "true");
+                        }
+                    }, interval);
                 }
             }
 
