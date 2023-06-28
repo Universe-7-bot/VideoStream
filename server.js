@@ -749,6 +749,25 @@ app.post("/delete-from-history", (req, res) => {
     }
 })
 
+app.get("/channel/:_id", (req, res) => {
+    try {
+        user.findOne({ _id: req.params._id }).then((User) => {
+            if (User == NULL) {
+                res.json({ msg: "Channel not found", code: 300 });
+            }
+            else {
+                res.render("single-channel", {
+                    isAuthenticated: req.session.userid ? true : false,
+                    user: User,
+                    isMyChannel: req.session.userid == req.params._id
+                })
+            }
+        })
+    } catch (error) {
+        console.log(error);
+    }
+})
+
 app.listen(PORT, (err) => {
     if (err) console.log(err);
     else console.log("Server is running on PORT : " + PORT);
