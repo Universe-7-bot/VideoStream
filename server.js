@@ -749,17 +749,27 @@ app.post("/delete-from-history", (req, res) => {
     }
 })
 
-app.get("/channel/:_id", (req, res) => {
+app.get("/channel/:_id", async (req, res) => {
     try {
+        const User = await user.findOne({ _id: new ObjectId(req.session.userid) }); 
+        var activeNotifications = 0;
+            if (User) {
+                const notifications = User.notification;
+                for (var i = 0; i < notifications.length; i++) {
+                    if (notifications[i].is_read == false) activeNotifications++;
+                }
+        }
+
         user.findOne({ _id: req.params._id }).then((User) => {
-            if (User == NULL) {
+            if (!User) {
                 res.json({ msg: "Channel not found", code: 300 });
             }
             else {
                 res.render("single-channel", {
                     isAuthenticated: req.session.userid ? true : false,
                     user: User,
-                    isMyChannel: req.session.userid == req.params._id
+                    isMyChannel: req.session.userid == req.params._id,
+                    notificationLength: activeNotifications
                 })
             }
         })

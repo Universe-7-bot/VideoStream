@@ -3,6 +3,12 @@
         <img src="/images/home-icon.svg" class="sidenav-icon" alt="home">
         <p class="sidenav-text">Home</p>
     </a>
+    <% if (isAuthenticated) {%>
+        <a class="sidenav-item" onclick="goToMyChannel()">
+            <img src="/images/user.svg" class="sidenav-icon" alt="user">
+            <p class="sidenav-text">My Channel</p>
+        </a>
+    <% } %>
     <a class="sidenav-item" href="/upload">
         <img src="/images/upload-white.svg" class="sidenav-icon" alt="upload">
         <p class="sidenav-text">Upload Video</p>
@@ -11,8 +17,16 @@
         <img src="/images/history-white.svg" class="sidenav-icon" alt="history">
         <p class="sidenav-text">Watch History</p>
     </a>
-    <a class="sidenav-item">
-        <img src="/images/home-icon.svg" class="sidenav-icon" alt="home">
-        <p class="sidenav-text">Home</p>
-    </a>
 </div>
+
+<script>
+    const goToMyChannel = () => {
+        fetch("http://localhost:3000/get-user").then((res) => {
+            return res.json();
+        }).then((f_res) => {
+            if (f_res.code == 500) {
+                window.location.href = `/channel/${f_res.user._id}`;
+            }
+        })
+    };
+</script>
