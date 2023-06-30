@@ -233,7 +233,12 @@ app.post("/upload-video", async (req, res) => {
                                 title: title,
                                 views: 0,
                                 thumbnail: newThumbnailPath,
-                                watch: currentTime
+                                watch: currentTime,
+                                category: category,
+                                createdAt: currentTime,
+                                minutes: minutes,
+                                seconds: seconds,
+                                hours: hours,
                             }
                         }
                     }).then((updatedUser) => {
@@ -751,13 +756,13 @@ app.post("/delete-from-history", (req, res) => {
 
 app.get("/channel/:_id", async (req, res) => {
     try {
-        const User = await user.findOne({ _id: new ObjectId(req.session.userid) }); 
+        const User = await user.findOne({ _id: new ObjectId(req.session.userid) });
         var activeNotifications = 0;
-            if (User) {
-                const notifications = User.notification;
-                for (var i = 0; i < notifications.length; i++) {
-                    if (notifications[i].is_read == false) activeNotifications++;
-                }
+        if (User) {
+            const notifications = User.notification;
+            for (var i = 0; i < notifications.length; i++) {
+                if (notifications[i].is_read == false) activeNotifications++;
+            }
         }
 
         user.findOne({ _id: req.params._id }).then((User) => {
@@ -773,6 +778,64 @@ app.get("/channel/:_id", async (req, res) => {
                 })
             }
         })
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+app.post("/change-profile-photo", (req, res) => {
+    try {
+        if (req.session.userid) {
+            const form = new formidable.IncomingForm();
+            form.parse(req, (err, fields, files) => {
+                if (err) {
+                    return res.json({ msg: "Error parsing form data", code: 500 });
+                }
+                if (!files.image) return res.json({ msg: "Select a profile picture", code: 300 });
+                // console.log(files.image);
+                const oldPath = files.image.filepath;
+                const newPath = "static/profiles/" + req.session.userid + "-" + files.image.originalFilename;
+                mv(oldPath, newPath, (err) => {
+                    if (err) console.log(err);
+                    else {
+                        user.updateOne({
+                            _id: new ObjectId(req.session.userid)
+                        }, {
+                            $set: {
+                                "image": newPath
+                            }
+                        }).then(() => {
+
+                        });
+
+                        user.updateMany({
+                            "subscriptions._id": req.session.userid
+                        }, {
+                            $set: {
+                                "subscriptions.$.image": newPath
+                            }
+                        }).then((User) => {
+                            // console.log(User);
+                        });
+
+                        video.updateMany({
+                            "user._id": new ObjectId(req.session.userid)
+                        }, {
+                            $set: {
+                                "user.image": newPath
+                            }
+                        }).then(() => {
+
+                        });
+                        // return res.json({ msg: "Profile picture changed successfully", code: 400 });
+                        res.redirect("/channel/" + req.session.userid);
+                    }
+                });
+            })
+        }
+        else {
+            res.redirect("/login");
+        }
     } catch (error) {
         console.log(error);
     }

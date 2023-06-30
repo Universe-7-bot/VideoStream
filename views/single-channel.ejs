@@ -13,23 +13,168 @@
 </head>
 
 <body>
-    <div class="single-channel-main-div">
-        <%- include("components/header.ejs") %>
-            <div class="sidenav-content d-flex flex-row">
-                <%- include("components/side-navbar.ejs") %>
-                    <div class="content-wrapper" id="content-wrapper">
-                        <div class="row single-channel-row"></div>
-                    </div>
-            </div>
-    </div>
-    <%- include("components/footer.ejs") %>
+    <% const baseUrl="http://localhost:3000/" %>
+    <% const months=["January", "February" , "March" , "April" , "May" , "June" , "July" , "August" , "September" , "October" , "November" , "December" ]; %>
+        <% if(isMyChannel) { %>
+            <form method="POST" action="/change-profile-photo" enctype="multipart/form-data"
+                id="form-change-profile-photo">
+                <input type="file" id="input-file-change-profile-photo" style="display: none;" accept="image/*"
+                    name="image" onchange="document.getElementById('form-change-profile-photo').submit()" required>
+            </form>
 
+            <form method="POST" action="/change-cover-photo" enctype="multipart/form-data" id="form-change-cover-photo">
+                <input type="file" id="input-file-change-cover-photo" style="display: none;" accept="image/*"
+                    name="image" onchange="document.getElementById('form-change-cover-photo').submit()" required>
+            </form>
+            <% } %>
+                <div class="single-channel-main-div">
+                    <%- include("components/header.ejs") %>
+                        <div class="sidenav-content d-flex flex-row">
+                            <%- include("components/side-navbar.ejs") %>
+                                <div class="content-wrapper" id="content-wrapper">
+                                    <div class="row single-channel-row">
+                                        <% if(isMyChannel) { %>
+                                            <div class="single-channel-coverphoto-wrapper">
+                                                <img onclick="document.getElementById('input-file-change-cover-photo').click()"
+                                                    src="<%= baseUrl + user.coverPhoto.substring(7) %>"
+                                                    class="cover-photo" onerror="this.src='/images/placeholder.svg'"
+                                                    alt="cover-photo">
+                                                <div class="single-channel-coverphoto-overlay d-flex flex-column align-items-center justify-content-center" onclick="document.getElementById('input-file-change-cover-photo').click()">
+                                                    <img src="/images/camera-icon.svg" class="coverphoto-camera-icon" alt="camera-icon">
+                                                    <p class="coverphoto-overlay-text">Click to change cover photo</p>
+                                                </div>
+                                            </div>
+                                            <% } else { %>
+                                                <div class="single-channel-coverphoto-wrapper">
+                                                    <img src="<%= baseUrl + user.coverPhoto.substring(7) %>"
+                                                        class="cover-photo" onerror="this.src='/images/placeholder.svg'"
+                                                        alt="cover-photo">
+                                                </div>
+                                                <% } %>
 
+                                            <% if(isMyChannel) { %>
+                                                <div class="single-channel-profilephoto-wrapper">
+                                                    <img onclick="document.getElementById('input-file-change-profile-photo').click()"
+                                                        src="<%= baseUrl + user.image.substring(7) %>"
+                                                        class="profile-photo"
+                                                        onerror="this.src='/images/profilephoto.png'"
+                                                        alt="profile-photo">
+                                                    <div class="single-channel-profilephoto-overlay d-flex flex-column align-items-center justify-content-center" onclick="document.getElementById('input-file-change-profile-photo').click()">
+                                                        <img src="/images/camera-icon.svg" class="profilephoto-camera-icon" alt="camera-icon">
+                                                        <p class="profilephoto-overlay-text">Click to change profile photo</p>
+                                                    </div>
+                                                </div>
+                                                <% } else { %>
+                                                    <div class="single-channel-profilephoto-wrapper">
+                                                        <img src="<%= baseUrl + user.image.substring(7) %>"
+                                                            class="profile-photo"
+                                                            onerror="this.src='/images/profilephoto.png'"
+                                                            alt="profile-photo">
+                                                        </div>
+                                                <% } %>
+                                            <div class="single-channel-details d-flex flex-row">
+                                                <div class="single-channel-name d-flex align-items-center justify-content-center">
+                                                    <p class="channel-username">
+                                                        <%= user.name %>
+                                                    </p>
+                                                </div>
+                                                <div class="single-channel-tabs d-flex flex-row">
+                                                    <button class="single-channel-tablinks active" onclick="openTab(event, 'videos')">Videos</button>
+                                                    <button class="single-channel-tablinks" onclick="openTab(event, 'playlists')">Playlists</button>
+                                                </div>
+                                                <div class="single-channel-subscribe"></div>
+                                            </div>
+                                            <div id="videos" class="single-channel-tabcontent" style="display: block !important;">
+                                                <div class="row video-tab-row">
+                                                    <% const videos = user.videos.reverse() %>
+                                                    <% videos.forEach((video) => { %>
+                                                        <% var createdAt=new Date(video.createdAt); var date=createdAt.getDate() + "" ; date=date.padStart(2, "0" ) + " " + months[createdAt.getMonth()] + ", " + createdAt.getFullYear(); %>
+                                                        <% var videoHours=video.hours + ""; var videoMinutes=video.minutes + ""; var videoSeconds=video.seconds + ""; %>
+                                                            <div class="col-md-3 d-flex justify-content-center">
+                                                                <div class="card single-channel-video-card">
+                                                                    <div class="single-channel-video-overlay d-flex align-items-center justify-content-center">
+                                                                        <img src="/images/play-icon.svg" class="single-channel-play-icon" alt="play-icon" onclick="goToWatchVideo(this)" data-watch="<%= video.watch %>">
+                                                                    </div>
+                                                                    <p class="single-channel-video-time d-flex align-items-center justify-content-center">
+                                                                        <%= videoHours + ":" + videoMinutes.padStart(2, "0" ) + ":" + videoSeconds.padStart(2, "0" ) %>
+                                                                    </p>
+                                                                    <img src="<%= baseUrl + video.thumbnail.substring(7) %>" class="card-img-top single-channel-video-card-img" alt="single-channel">
+                                                                    <div class="card-body single-channel-video-card-body">
+                                                                        <p class="single-channel-video-card-title">
+                                                                            <%= video.title %>
+                                                                        </p>
+                                                                        <p class="single-channel-video-card-text">
+                                                                            <%= video.category %>
+                                                                        </p>
+                                                                        <div class="d-flex flex-row">
+                                                                            <img src="/images/history-eye.svg" class="single-channel-eye-icon" alt="eye-icon">
+                                                                            <p class="single-channel-video-card-views">
+                                                                                <%= video.views %> views
+                                                                            </p>
+                                                                            <img src="/images/calendar-icon.svg" class="single-channel-calendar-icon" alt="calendar-icon">
+                                                                            <p class="single-channel-video-card-post">
+                                                                                <%= date %>
+                                                                            </p>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                    <% }); %>
+                                                </div>
+                                            </div>
+                                                                    
+                                            <div id="playlists" class="single-channel-tabcontent">
+                                                
+                                            </div>
+                                    </div>
+                                </div>
+                        </div>
+                </div>
+                <%- include("components/footer.ejs") %>
 
-        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
-            crossorigin="anonymous"></script>
+                    <script>
+
+                        const goToWatchVideo = (element) => {
+                                const watch = element.getAttribute("data-watch");
+                                window.location.href = `/watch/${watch}`;
+                            };
+
+                        const openTab = (event, tabName) => {
+                            var tabcontent, tablinks;
+
+                            tabcontent = document.getElementsByClassName("single-channel-tabcontent");
+                            for (var i = 0; i < tabcontent.length; i++) {
+                                tabcontent[i].style.display = "none";
+                            }
+
+                            tablinks = document.getElementsByClassName("single-channel-tablinks");
+                            for (var i = 0; i < tablinks.length; i++) {
+                                tablinks[i].className = tablinks[i].className.replace(" active", "");
+                            }
+
+                            document.getElementById(tabName).style.display = "block";
+                            event.currentTarget.className += " active";
+                        };
+
+                        // const changeProfilePhoto = () => {
+                        //     const profilePhoto = document.getElementById("input-file-change-profile-photo").files[0];
+                        //     const formData = new FormData();
+                        //     formData.append("profilePhoto", profilePhoto);
+                        //     fetch("http://localhost:3000/change-profile-photo", {
+                        //         method: "POST",
+                        //         body: formData
+                        //     }).then((res) => {
+                        //         return res.json();
+                        //     }).then((f_res) => {
+                        //         console.log(f_res.msg);
+                        //     })
+                        // };
+                    </script>
+
+                    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+                    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+                        integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
+                        crossorigin="anonymous"></script>
 </body>
 
 </html>

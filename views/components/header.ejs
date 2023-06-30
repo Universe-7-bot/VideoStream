@@ -78,7 +78,17 @@
             </ul>
         </div>
     </div>
+    <% if (isAuthenticated) { %>
     <div class="header-myprofile"></div>
+    <% } else { %> 
+        <div class="header-login d-flex align-items-center justify-content-center">
+            <button onclick="goToLoginPage()"
+                class="header-login-btn d-flex flex-row align-items-center justify-content-center">
+                <img src="/images/login.svg" class="header-login-icon" alt="login-icon">
+                <p class="header-login-btn-text">Login</p>
+            </button>
+        </div>
+        <% } %>
 </div>
 <script>
 
@@ -111,6 +121,10 @@
     const goToUploadVideoPage = () => {
         window.location.href = '/upload';
     }
+
+    const goToLoginPage = () => {
+            window.location.href = '/login';
+        }
 
     function readNotification(element) {
         const notificationId = element.getAttribute("data-id");
