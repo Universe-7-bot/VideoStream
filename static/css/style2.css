@@ -850,7 +850,7 @@
     height: 140px;
     width: 140px;
     border-radius: 50%;
-    padding: 0.5rem;
+    padding: 0.35rem;
     background-color: white;
     position: absolute;
     top: 10rem;
@@ -920,7 +920,7 @@
     border: none;
     background-color: inherit;
     margin: 0 0.3rem 0 0.3rem;
-    font-size: 14px;
+    font-size: 13.5px;
     color: rgb(104, 102, 102);
 }
 
@@ -936,6 +936,38 @@
 
 .single-channel-subscribe {
     width: 20%;
+}
+
+.single-channel-subscribe-btn {
+    border: none;
+    background: linear-gradient(135deg, #ff253a 0%, #ff8453 100%);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    height: 2rem;
+    padding: 0.5rem;
+    border-radius: 4px;
+}
+
+.subscribe-icon {
+    height: 18px;
+    width: 18px;
+    margin: 0 0.2rem 0 0;
+}
+
+.subscribe-text {
+    margin: 0 0 0 0;
+    font-size: 14px;
+    font-weight: 500;
+    color: white;
+}
+
+.subscribers-text {
+    margin: 0 0 0 0;
+    font-size: 14px;
+    font-weight: 500;
+    color: rgb(138, 138, 138);
 }
 
 .single-channel-tabcontent {

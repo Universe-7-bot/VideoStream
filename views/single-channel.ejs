@@ -82,7 +82,18 @@
                                                     <button class="single-channel-tablinks active" onclick="openTab(event, 'videos')">Videos</button>
                                                     <button class="single-channel-tablinks" onclick="openTab(event, 'playlists')">Playlists</button>
                                                 </div>
-                                                <div class="single-channel-subscribe"></div>
+                                                <% if (isMyChannel) { %>
+                                                    <div class="single-channel-subscribe d-flex align-items-center">
+                                                        <p class="subscribers-text"><%= user.subscribers %> Subscribers</p>
+                                                    </div>
+                                                <% } else { %>
+                                                    <div class="single-channel-subscribe d-flex align-items-center">
+                                                        <button class="single-channel-subscribe-btn">
+                                                            <img src="/images/subscribe.svg" class="subscribe-icon" alt="subscribe">
+                                                            <p class="subscribe-text">Subscribe</p>
+                                                        </button>
+                                                    </div>
+                                                    <% } %>
                                             </div>
                                             <div id="videos" class="single-channel-tabcontent" style="display: block !important;">
                                                 <div class="row video-tab-row">

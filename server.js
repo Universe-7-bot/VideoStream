@@ -841,6 +841,45 @@ app.post("/change-profile-photo", (req, res) => {
     }
 })
 
+app.post("/change-cover-photo", (req, res) => {
+    try {
+        if (req.session.userid) {
+            const form = new formidable.IncomingForm();
+            form.parse(req, (err, fields, files) => {
+                if (err) {
+                    return res.json({ msg: "Error parsing form data", code: 500 });
+                }
+                if (!files.image) return res.json({ msg: "Select a cover photo", code: 300 });
+                // console.log(files.image);
+                const oldPath = files.image.filepath;
+                const newPath = "static/covers/" + req.session.userid + "-" + files.image.originalFilename;
+                mv(oldPath, newPath, (err) => {
+                    if (err) console.log(err);
+                    else {
+                        user.updateOne({
+                            _id: new ObjectId(req.session.userid)
+                        }, {
+                            $set: {
+                                "coverPhoto": newPath
+                            }
+                        }).then(() => {
+
+                        });
+            
+                        // return res.json({ msg: "Cover photo changed successfully", code: 400 });
+                        res.redirect("/channel/" + req.session.userid);
+                    }
+                });
+            })
+        }
+        else {
+            res.redirect("/login");
+        }
+    } catch (error) {
+        console.log(error);
+    }
+})
+
 app.listen(PORT, (err) => {
     if (err) console.log(err);
     else console.log("Server is running on PORT : " + PORT);
