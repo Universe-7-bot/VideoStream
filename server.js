@@ -880,6 +880,117 @@ app.post("/change-cover-photo", (req, res) => {
     }
 })
 
+app.get("/edit/:watch", (req, res) => {
+    try {
+        if (req.session.userid) {
+            video.findOne({
+                $and: [{
+                        "watch": parseInt(req.params.watch)
+                }, {
+                        "user._id": req.session.userid
+                }]
+            }).then((video) => {
+                if (!video) res.json({ msg: "Sorry you do not own this video" });
+                else {
+                    res.render("edit-video", {
+                        isAuthenticated: true,
+                        video: video
+                    })
+                }
+            })
+        }
+        else {
+            res.redirect("/");
+        }
+    } catch(error) {
+        console.log(error);
+    }
+})
+
+app.post("/edit", (req, res) => {
+    try {
+        if (req.session.userid) {
+            const form = new formidable.IncomingForm();
+            form.parse(req, (err, fields, files) => {
+                if (err) {
+                    return res.json({ msg: "Error parsing form data", code: 500 });
+                }
+
+                if (!files.thumbnail) {
+                    return res.json({ msg: "Select all the fields", code: 500 });
+                }
+                const thumbnailPath = files.thumbnail.filepath;
+                const title = fields.title;
+                const description = fields.description;
+                const tags = fields.tags;
+                const category = fields.category;
+                const videoId = fields.videoId;
+                console.log(files.thumbnail);
+
+                if (!title || !description || !tags || !category) {
+                    return res.json({ msg: "Select all the fields", code: 500 });
+                }
+
+                video.findOne({
+                    $and: [{
+                        _id: new ObjectId(videoId)
+                    }, {
+                        "user._id": req.session.userid
+                    }]
+                }).then((video) => {
+                    if (!video) {
+                        res.json({ msg: "Sorry you do not own this video" });
+                    }
+                    else {
+                        var newPath = video.thumbnail;
+                        if (files.thumbnail.size > 0) {
+                            newPath = thumbnailPath;
+                            mv(video.thumbnail, newPath, (error) => {
+                                console.log(error);
+                            })
+                        }
+                        video.findOneAndUpdate({
+                            "_id": new ObjectId(videoId)
+                        }, {
+                            $set: {
+                                "title": title,
+                                "description": description,
+                                "tags": tags,
+                                "category": category,
+                                "thumbnail": newPath
+                            }
+                        }).then(() => {
+
+                        })
+
+                        user.findOneAndUpdate({
+                            $and: [{
+                                _id: new ObjectId(req.session.userid)
+                            }, {
+                                "videos._id": videoId
+                            }]
+                        }, {
+                            $set: {
+                                "videos.$.title": title,
+                                "videos.$.thumbnail": newPath,
+                            }
+                        }).then(() => {
+                            
+                        })
+                        // return res.json({ msg: "Video updated successfully!", code: 400 });
+                        res.redirect("/channel/" + req.session.userid);
+                    }
+                })
+            })
+        }
+        else {
+            res.redirect("/login");
+        }
+    } catch (error) {
+        console.log(error);
+    }
+})
+
 app.listen(PORT, (err) => {
     if (err) console.log(err);
     else console.log("Server is running on PORT : " + PORT);
