@@ -225,11 +225,11 @@ app.post("/upload-video", async (req, res) => {
                         dislikers: [],
                         comment: []
                     })
-                    await newVideo.save();
+                    const newCreatedVideo = await newVideo.save();
                     user.findByIdAndUpdate(req.session.userid, {
                         $push: {
                             videos: {
-                                _id: existingUser._id,
+                                _id: new ObjectId(newCreatedVideo._id),
                                 title: title,
                                 views: 0,
                                 thumbnail: newThumbnailPath,
@@ -795,6 +795,13 @@ app.post("/change-profile-photo", (req, res) => {
                 // console.log(files.image);
                 const oldPath = files.image.filepath;
                 const newPath = "static/profiles/" + req.session.userid + "-" + files.image.originalFilename;
+                user.findOne({ _id: req.session.userid }).then((User) => {
+                    if (User) {
+                        fs.unlink(User.image, (error) => {
+                            if (error) console.log(error);
+                        })
+                    }
+                })
                 mv(oldPath, newPath, (err) => {
                     if (err) console.log(err);
                     else {
@@ -837,7 +844,7 @@ app.post("/change-profile-photo", (req, res) => {
             res.redirect("/login");
         }
     } catch (error) {
-        console.log(error);
+       if (error) console.log(error);
     }
 })
 
@@ -853,6 +860,13 @@ app.post("/change-cover-photo", (req, res) => {
                 // console.log(files.image);
                 const oldPath = files.image.filepath;
                 const newPath = "static/covers/" + req.session.userid + "-" + files.image.originalFilename;
+                user.findOne({ _id: req.session.userid }).then((User) => {
+                    if (User) {
+                        fs.unlink(User.coverPhoto, (error) => {
+                            if (error) console.log(error);
+                        })
+                    }
+                })
                 mv(oldPath, newPath, (err) => {
                     if (err) console.log(err);
                     else {
@@ -876,13 +890,22 @@ app.post("/change-cover-photo", (req, res) => {
             res.redirect("/login");
         }
     } catch (error) {
-        console.log(error);
+       if (error) console.log(error);
     }
 })
 
-app.get("/edit/:watch", (req, res) => {
+app.get("/edit/:watch", async (req, res) => {
     try {
         if (req.session.userid) {
+            const User = await user.findOne({ _id: new ObjectId(req.session.userid) });
+            var activeNotifications = 0;
+            if (User) {
+                const notifications = User.notification;
+                for (var i = 0; i < notifications.length; i++) {
+                    if (notifications[i].is_read == false) activeNotifications++;
+                }
+            }
+
             video.findOne({
                 $and: [{
                         "watch": parseInt(req.params.watch)
@@ -892,9 +915,15 @@ app.get("/edit/:watch", (req, res) => {
             }).then((video) => {
                 if (!video) res.json({ msg: "Sorry you do not own this video" });
                 else {
-                    res.render("edit-video", {
-                        isAuthenticated: true,
-                        video: video
+                    user.findOne({
+                        _id: new ObjectId(req.session.userid)
+                    }).then((User) => {
+                        res.render("edit-video", {
+                            isAuthenticated: true,
+                            video: video,
+                            user: User,
+                            notificationLength: activeNotifications
+                        })
                     })
                 }
             })
@@ -903,7 +932,7 @@ app.get("/edit/:watch", (req, res) => {
             res.redirect("/");
         }
     } catch(error) {
-        console.log(error);
+        if (error) console.log(error);
     }
 })
 
@@ -916,20 +945,15 @@ app.post("/edit", (req, res) => {
                     return res.json({ msg: "Error parsing form data", code: 500 });
                 }
 
-                if (!files.thumbnail) {
-                    return res.json({ msg: "Select all the fields", code: 500 });
-                }
-                const thumbnailPath = files.thumbnail.filepath;
+                // const thumbnailPath = files.thumbnail.filepath;
                 const title = fields.title;
                 const description = fields.description;
                 const tags = fields.tags;
                 const category = fields.category;
                 const videoId = fields.videoId;
-                console.log(files.thumbnail);
-
-                if (!title || !description || !tags || !category) {
-                    return res.json({ msg: "Select all the fields", code: 500 });
-                }
+                const videothumbnail = fields.thumbnail;
+                const playlist = fields.playlist;
+                // console.log(files.thumbnail, videothumbnail, videoId);
 
                 video.findOne({
                     $and: [{
@@ -937,48 +961,92 @@ app.post("/edit", (req, res) => {
                     }, {
                         "user._id": req.session.userid
                     }]
-                }).then((video) => {
-                    if (!video) {
+                }).then((Video) => {
+                    if (!Video) {
                         res.json({ msg: "Sorry you do not own this video" });
                     }
                     else {
-                        var newPath = video.thumbnail;
-                        if (files.thumbnail.size > 0) {
-                            newPath = thumbnailPath;
-                            mv(video.thumbnail, newPath, (error) => {
-                                console.log(error);
+                        if (files.thumbnail) {
+                            newPath = "static/thumbnails/" + new Date().getTime() + "-" + files.thumbnail.originalFilename;
+                            fs.unlink(Video.thumbnail, (error) => {
+                                if (error) console.log(error);
                             })
-                        }
-                        video.findOneAndUpdate({
-                            "_id": new ObjectId(videoId)
-                        }, {
-                            $set: {
-                                "title": title,
-                                "description": description,
-                                "tags": tags,
-                                "category": category,
-                                "thumbnail": newPath
-                            }
-                        }).then(() => {
+                            mv(files.thumbnail.filepath, newPath, (error) => {
+                                if (error) console.log(error);
+                                // else console.log("file renamed");
+                            })
 
-                        })
-
-                        user.findOneAndUpdate({
-                            $and: [{
-                                _id: new ObjectId(req.session.userid)
+                            video.findOneAndUpdate({
+                                "_id": new ObjectId(videoId)
                             }, {
-                                "videos._id": videoId
-                            }]
-                        }, {
-                            $set: {
-                                "videos.$.title": title,
-                                "videos.$.thumbnail": newPath,
-                            }
-                        }).then(() => {
-                            
-                        })
-                        // return res.json({ msg: "Video updated successfully!", code: 400 });
-                        res.redirect("/channel/" + req.session.userid);
+                                $set: {
+                                    "title": title,
+                                    "description": description,
+                                    "tags": tags,
+                                    "category": category,
+                                    "thumbnail": newPath
+                                }
+                            }).then(() => {
+
+                            })
+
+                            user.findOneAndUpdate({
+                                $and: [{
+                                    "_id": new ObjectId(req.session.userid)
+                                }, {
+                                    "videos._id": new ObjectId(videoId)
+                                }]
+                            }, {
+                                $set: {
+                                    "videos.$.title": title,
+                                    "videos.$.category": category,
+                                    "videos.$.thumbnail": newPath,
+                                }
+                            }).then((User) => {
+                                // console.log(User);
+                            })
+                            return res.json({ msg: "Video updated successfully!", userid: req.session.userid, code: 400 });
+                            // console.log("with thumbnail edited");
+                            // res.redirect("/channel/" + req.session.userid);
+                            // return;
+                        }
+
+                        if (videothumbnail) {
+                            video.findOneAndUpdate({
+                                "_id": new ObjectId(videoId)
+                            }, {
+                                $set: {
+                                    "title": title,
+                                    "description": description,
+                                    "tags": tags,
+                                    "category": category,
+                                    "thumbnail": videothumbnail
+                                }
+                            }).then(() => {
+
+                            })
+
+                            user.findOneAndUpdate({
+                                $and: [{
+                                    "_id": new ObjectId(req.session.userid)
+                                }, {
+                                    "videos._id": new ObjectId(videoId)
+                                }]
+                            }, {
+                                $set: {
+                                    "videos.$.title": title,
+                                    "videos.$.category": category,
+                                    "videos.$.thumbnail": videothumbnail
+                                }
+                            }).then((User) => {
+                                // console.log(User);
+                            })
+                            return res.json({ msg: "Video updated successfully!", userid: req.session.userid, code: 400 });
+                            // console.log("no thumbnail edited");
+                            // res.redirect("/channel/" + req.session.userid);
+                            // return;
+                        }
+
                     }
                 })
             })
@@ -987,7 +1055,93 @@ app.post("/edit", (req, res) => {
             res.redirect("/login");
         }
     } catch (error) {
-        console.log(error);
+       if (error) console.log(error);
+    }
+})
+
+app.post("/delete-video", (req, res) => {
+    try {
+        if (req.session.userid) {
+            const { videoId } = req.body;
+            video.findOne({
+                $and: [{
+                    _id: new ObjectId(videoId)
+                }, {
+                    "user._id": req.session.userid
+                }]
+            }).then((Video) => {
+                if (!Video) {
+                    return res.json({ msg: "Sorry, you do not own this video", code: 300 });
+                }
+                fs.unlink(Video.filePath, (error) => {
+                    if (error) console.log(error);
+                    fs.unlink(Video.thumbnail, (error) => {
+                        if (error) console.log(error);
+                    })
+                })
+                video.deleteOne({
+                    $and: [{
+                        "_id": new ObjectId(videoId)
+                    }, {
+                        "user._id": req.session.userid
+                    }]
+                }).then(() => {
+
+                })
+                user.findOneAndUpdate({
+                    _id: new ObjectId(req.session.userid)
+                }, {
+                    $pull: {
+                        "videos": {
+                            "_id": new ObjectId(videoId)
+                        }
+                    }
+                }).then(() => {
+    
+                })
+                user.updateMany({}, {
+                    $pull: {
+                        "history": {
+                            "videoId": videoId.toString()
+                        }
+                    }
+                }).then(() => {
+
+                })
+                return res.json({ msg: "Video deleted successfully", code: 400, userid: req.session.userid });
+                // res.redirect("/channel/" + req.session.userid);
+            })
+        }
+        else {
+            read.redirect("/login");
+        }
+    } catch (error) {
+        if (error) console.log(error);
+    }
+})
+
+app.post("/create-playlist", (req, res) => {
+    try {
+        if (req.session.userid) {
+            const { title } = req.body;
+            user.updateOne({
+                _id: new ObjectId(req.session.userid)
+            }, {
+                $push: {
+                    "_id": new ObjectId(),
+                    "title": title,
+                    "videos": []
+                }
+            }).then(() => {
+
+            })
+            res.redirect("/channel/" + req.session.userid);
+        }
+        else {
+            res.redirect("/login");
+        }
+    } catch (error) {
+        if (error) console.log(error);
     }
 })
 

@@ -1,0 +1,258 @@
+/* ------------------ edit-video page ------------------ */
+.edit-video-main-div {
+    min-height: 100vh;
+    width: 100%;
+}
+
+.edit-video-row {
+    width: 100%;
+    padding: 2rem;
+    margin: 0 0 0 0 !important;
+    background-color: rgb(250, 250, 250);
+}
+
+.edit-video-div {
+    width: 100%;
+    margin: 0;
+}
+
+.edit-video-header {
+    width: 100%;
+}
+
+.edit-video-header-title {
+    font-size: 18px;
+    font-weight: 500;
+    color: rgb(0, 0, 0);
+}
+
+.edit-video-image-div {
+    width: 100%;
+    margin: 1.5rem 0 1.5rem 0;
+}
+
+#edit-video-wrapper {
+    width: 20%;
+    height: 7rem;
+    /* display: none; */
+    border: 1px solid #bdbbbb;
+    border-radius: 4px;
+    margin: 0 1rem 0 0;
+    background-color: rgb(236, 239, 240);
+}
+
+/* drag drop zone */
+#drag-drop-zone-img {
+    width: 80%;
+    height: 7rem;
+    margin: 0 0 0 1rem;
+    padding: 1rem;
+    border: 1px dashed #adabab;
+    border-radius: 4px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: rgb(236, 239, 240);
+}
+
+/* #drag-drop-zone-img:hover {
+    background-color: #6d52da;
+} */
+
+#edit-video-image-wrapper {
+    width: 20%;
+    height: 7rem;
+    /* display: none; */
+    border: 1px solid #bdbbbb;
+    border-radius: 4px;
+    margin: 0 1rem 0 0;
+    background-color: rgb(236, 239, 240);
+}
+
+.edit-video-uploaded-image {
+    width: 100%;
+    height: 100%;
+    /* object-fit: cover; */
+    border-radius: 4px;
+    /* display: none; */
+}
+
+.edit-uploaded-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    /* border: 1px solid #282829; */
+    border-radius: 4px;
+    /* display: none; */
+}
+
+#file-input-img {
+    display: none;
+}
+
+.edit-video-icon {
+    height: 40px;
+    width: 40px;
+    margin: 0 0 0.1rem 0;
+}
+
+.drag-drop-text {
+    font-size: 13px;
+    margin: 0.1rem 0 0.1rem 0;
+    color: rgb(139, 135, 135);
+}
+
+#edit-video-upload-button-img {
+    height: 2rem;
+    /* width: 5rem; */
+    color: rgb(108, 72, 106);
+    border: none;
+    /* background: #6845f6; */
+    border-radius: 2px;
+    font-size: 14px;
+    font-weight: bold;
+    margin: 0.1rem 0 0.1rem 0;
+}
+
+#edit-video-upload-button-img:hover {
+    text-decoration: underline rgb(108, 72, 106);
+}
+
+/* ----------------------------- */
+.edit-video-image-progress {
+    width: 80%;
+    height: 7rem;
+    margin: 0 0 0 1rem;
+    padding: 1rem;
+    border: 1px dashed #adabab;
+    border-radius: 4px;
+    /* text-align: center; */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: rgb(236, 239, 240);
+    display: none;
+}
+
+/* .preview-image-icon {
+    height: 30px;
+    width: 30px;
+} */
+
+.edit-video-show-image-before {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.edit-video-show-image-text {
+    font-size: 12px;
+    color: rgb(139, 135, 135);
+    margin: 0 0 0 0;
+}
+
+.edit-video-separator {
+    width: 100%;
+}
+
+.edit-video-separator hr {
+    margin: 0;
+    color: #9a9797;
+}
+
+.edit-video-details-wrapper {
+    width: 100%;
+}
+
+.edit-video-title {
+    width: 100%;
+    margin: 1.2rem 0 1.2rem 0;
+}
+
+.edit-video-common-text {
+    font-size: 15px;
+    font-weight: 500;
+    color: rgb(107, 107, 107);
+    margin: 0 0 0.4rem 0;
+}
+
+.edit-input {
+    width: 100%;
+    height: 2.4rem;
+    background-color: rgb(236, 239, 240);
+    border: 1px solid #d2cdcd;
+    border-radius: 4px;
+    padding: 0 0 0 0.5rem;
+    color: rgb(71, 71, 71);
+    font-size: 14px;
+}
+
+.edit-input::placeholder {
+    font-size: 13px;
+}
+
+.edit-input:focus {
+    outline: none;
+    box-shadow: 0 0 0 0.15rem rgb(235, 216, 236);
+    background-color: white;
+}
+
+.edit-video-description {
+    width: 100%;
+    margin: 0 0 0.95rem 0;
+}
+
+.edit-video-description textarea {
+    padding: 0.2rem 0 0 0.5rem;
+    height: 5rem;
+    resize: none;
+}
+
+.edit-video-tags {
+    width: 100%;
+    margin: 0 0 1.2rem 0;
+}
+
+.edit-video-category {
+    width: 100%;
+    margin: 0 0 1.2rem 0;
+}
+
+.edit-video-category .form-select {
+    width: 100%;
+    height: 2.4rem;
+    background-color: rgb(236, 239, 240);
+    border: 1px solid #d2cdcd;
+    border-radius: 4px;
+    padding: 0 0 0 0.5rem;
+    color: rgb(71, 71, 71);
+    font-size: 14px;
+}
+
+.edit-video-category .form-select:focus {
+    outline: none;
+    box-shadow: 0 0 0 0.15rem rgb(235, 216, 236);
+    background-color: white;
+}
+
+.edit-video-submit-btn-div {
+    width: 100%;
+    margin: 0.5rem 0 1.5rem 0;
+}
+
+.edit-video-submit-btn {
+    height: 2.5rem;
+    width: 12%;
+    color: white;
+    border: none;
+    background: rgb(107, 69, 106);
+    border-radius: 4px;
+    font-size: 16px;
+    font-weight: 500;
+}

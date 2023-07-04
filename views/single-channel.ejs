@@ -109,6 +109,12 @@
                                                                     <p class="single-channel-video-time d-flex align-items-center justify-content-center">
                                                                         <%= videoHours + ":" + videoMinutes.padStart(2, "0" ) + ":" + videoSeconds.padStart(2, "0" ) %>
                                                                     </p>
+                                                                    <% if (isMyChannel) { %>
+                                                                        <img src="/images/edit-icon.svg" class="channel-edit-icon" alt="edit" onclick="editVideo(this)"
+                                                                        data-watch="<%= video.watch %>">
+                                                                        <img src="/images/delete-icon.svg" class="channel-delete-icon" alt="delete" onclick="deleteVideo(this)"
+                                                                        data-id="<%= video._id %>">
+                                                                    <% } %>
                                                                     <img src="<%= baseUrl + video.thumbnail.substring(7) %>" class="card-img-top single-channel-video-card-img" alt="single-channel">
                                                                     <div class="card-body single-channel-video-card-body">
                                                                         <p class="single-channel-video-card-title">
@@ -135,7 +141,15 @@
                                             </div>
                                                                     
                                             <div id="playlists" class="single-channel-tabcontent">
-                                                
+                                                <% if (isMyChannel) { %>
+                                                    <div class="create-playlist d-flex align-items-center justify-content-center">
+                                                        <input type="text" id="playlist-title" class="playlist-title-input" placeholder="Playlist title">
+                                                        <button class="create-playlist-btn">
+                                                            <img src="/images/playlist-create.svg" class="create-playlist-icon" alt="playlist">
+                                                            <p class="create-playlist-text">Create New Playlist</p>
+                                                        </button>
+                                                    </div>
+                                                    <% } %>
                                             </div>
                                     </div>
                                 </div>
@@ -166,6 +180,45 @@
                             document.getElementById(tabName).style.display = "block";
                             event.currentTarget.className += " active";
                         };
+
+                        const editVideo = (element) => {
+                            const watch = element.getAttribute("data-watch");
+                            window.location.href = `/edit/${watch}`;
+                        }
+
+                        const deleteVideo = (element) => {
+                            const videoId = element.getAttribute("data-id");
+                            fetch("http://localhost:3000/delete-video", {
+                                method: "POST",
+                                headers: {
+                                    "Content-Type": "application/json"
+                                },
+                                body: JSON.stringify({ videoId })
+                            }).then((res) => {
+                                return res.json();
+                            }).then((f_res) => {
+                                if (f_res.code == 400) {
+                                    Toastify({
+                                        text: f_res.msg,
+                                        duration: 2000,
+                                        newWindow: true,
+                                        close: true,
+                                        gravity: "top",
+                                        position: "right",
+                                        stopOnFocus: true,
+                                        avatar: "/images/success-icon.svg",
+                                        style: {
+                                            background: "#000000",
+                                        },
+                                        onClick: function () { } // Callback after click
+                                    }).showToast();
+
+                                    setTimeout(() => {
+                                        window.location.href = `/channel/${f_res.userid}`;
+                                    }, 1500)
+                                }
+                            })
+                        }
 
                         // const changeProfilePhoto = () => {
                         //     const profilePhoto = document.getElementById("input-file-change-profile-photo").files[0];
