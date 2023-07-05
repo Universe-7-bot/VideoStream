@@ -144,12 +144,62 @@
                                                 <% if (isMyChannel) { %>
                                                     <div class="create-playlist d-flex align-items-center justify-content-center">
                                                         <input type="text" id="playlist-title" class="playlist-title-input" placeholder="Playlist title">
-                                                        <button class="create-playlist-btn">
+                                                        <button class="create-playlist-btn" onclick="createPlaylist()">
                                                             <img src="/images/playlist-create.svg" class="create-playlist-icon" alt="playlist">
                                                             <p class="create-playlist-text">Create New Playlist</p>
                                                         </button>
                                                     </div>
-                                                    <% } %>
+                                                <% } %>
+                                                <div class="row playlist-tab-row">
+                                                    <% const playlists=user.playlists.reverse() %>
+                                                        <% playlists.forEach((playlist)=> { %>
+                                                            <div class="col-md-3 d-flex justify-content-center">
+                                                                <div class="card single-channel-playlist-card">
+                                                                    <% if (playlist.videos.length > 0) { %>
+                                                                    <div class="single-channel-playlist-overlay d-flex align-items-center justify-content-center">
+                                                                        <img src="/images/play-icon.svg" class="single-channel-play-icon" alt="play-icon"
+                                                                            onclick="goToWatchVideo(this)">
+                                                                    </div>
+                                                                    <% } else { %>
+                                                                        <div class="single-channel-playlist-overlay d-flex align-items-center justify-content-center">
+                                                                            <img src="/images/play-icon.svg" class="single-channel-play-icon" alt="play-icon" onclick="goToWatchVideo(this)">
+                                                                        </div>
+                                                                    <% } %>
+                                                                            
+                                                                    <% if (playlist.videos.length > 0) { %>
+                                                                        <img src="<%= baseUrl + playlist.videos[0].thumbnail.substring(7) %>"
+                                                                            class="card-img-top single-channel-playlist-card-img" alt="single-channel">
+                                                                        <div class="playlist-details-wrapper d-flex align-items-center justify-content-between">
+                                                                            <img src="/images/playlist.svg" class="playlist-icon" alt="playlist">
+                                                                            <p class="playlist-videos-count"><%= playlist.videos.length %> videos</p>
+                                                                        </div>
+                                                                        <div class="card-body single-channel-playlist-card-body">
+                                                                            <p class="single-channel-playlist-card-title">
+                                                                                <%= playlist.title %>
+                                                                            </p>
+                                                                            <p class="single-channel-playlist-card-text">
+                                                                                
+                                                                            </p>
+                                                                        </div>
+                                                                    <% } else { %>
+                                                                        <img src="/images/empty-playlist.svg"
+                                                                        class="card-img-top single-channel-playlist-card-img" alt="single-channel">
+                                                                        <div class="playlist-details-wrapper d-flex align-items-center justify-content-between">
+                                                                            <img src="/images/playlist.svg" class="playlist-icon" alt="playlist">
+                                                                            <p class="playlist-videos-count">
+                                                                                <%= playlist.videos.length %> videos
+                                                                            </p>
+                                                                        </div>
+                                                                        <div class="card-body single-channel-playlist-card-body">
+                                                                            <p class="single-channel-playlist-card-title">
+                                                                                <%= playlist.title %>
+                                                                            </p>
+                                                                        </div>
+                                                                    <% } %>
+                                                                </div>
+                                                            </div>
+                                                        <% }); %>
+                                                </div>
                                             </div>
                                     </div>
                                 </div>
@@ -219,6 +269,55 @@
                                 }
                             })
                         }
+
+                        const createPlaylist = () => {
+                            const title = document.getElementById("playlist-title").value;
+                            fetch("http://localhost:3000/create-playlist", {
+                                method: "POST",
+                                headers: {
+                                    "Content-Type" : "application/json"
+                                },
+                                body: JSON.stringify({title})
+                            }).then((res) => {
+                                return res.json();
+                            }).then((f_res) => {
+                                if (f_res.code == 401) {
+                                    Toastify({
+                                        text: f_res.msg,
+                                        duration: 2000,
+                                        newWindow: true,
+                                        close: true,
+                                        gravity: "top",
+                                        position: "right",
+                                        stopOnFocus: true,
+                                        avatar: "/images/error-icon.svg",
+                                        style: {
+                                            background: "#000000",
+                                        },
+                                        onClick: function () { } // Callback after click
+                                    }).showToast();
+                                }
+                                else if (f_res.code == 500) {
+                                    Toastify({
+                                        text: f_res.msg,
+                                        duration: 2000,
+                                        newWindow: true,
+                                        close: true,
+                                        gravity: "top",
+                                        position: "right",
+                                        stopOnFocus: true,
+                                        avatar: "/images/success-icon.svg",
+                                        style: {
+                                            background: "#000000",
+                                        },
+                                        onClick: function () { } // Callback after click
+                                    }).showToast();
+                                    setTimeout(() => {
+                                        window.location.href = `/channel/${f_res.userid}`;
+                                    }, 1000)
+                                }
+                            })
+                        };
 
                         // const changeProfilePhoto = () => {
                         //     const profilePhoto = document.getElementById("input-file-change-profile-photo").files[0];

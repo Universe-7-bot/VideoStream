@@ -1,0 +1,18 @@
+<svg width="600" height="400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" preserveAspectRatio="none">
+      <defs>
+        <style type="text/css">
+          #holder text {
+            fill: #8A8888;
+            font-family: system-ui;
+            font-size: 50px;
+            font-weight: 500;
+          }
+        </style>
+      </defs>
+      <g id="holder">
+        <rect width="100%" height="100%" fill="#C5C3C3"></rect>
+        <g>
+          <text text-anchor="middle" x="50%" y="50%" dy=".3em">Empty playlist</text>
+        </g>
+      </g>
+    </svg>

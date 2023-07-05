@@ -159,6 +159,15 @@
                                             <option value="Sports" <%= video.category == "Sports" ? "selected" : "" %>>Sports</option>
                                         </select>
                                     </div>
+                                    <div class="edit-video-playlist">
+                                        <p class="edit-video-common-text">Video Playlist</p>
+                                        <select class="form-select" id="playlist-category" aria-label="Default select example">
+                                        <option value="Select playlist">Select playlist</option>
+                                        <% user.playlists.forEach((playlist) => { %>
+                                            <option value="<%= playlist._id %>" <%= video.playlist == playlist._id ? "selected" : "" %>><%= playlist.title %></option>
+                                        <% }) %>
+                                        </select>
+                                    </div>
                                 </form>
                             </div>
                             <div class="edit-video-submit-btn-div">
@@ -273,6 +282,7 @@
                 const category = document.getElementById("category").value;
                 const videoId = document.getElementById("videoId").value;
                 const videothumbnail = document.getElementById("video-thumbnail").value;
+                const playlist = document.getElementById("playlist-category").value;
 
                 const formData = new FormData();
                 if (thumbnail)
@@ -285,6 +295,7 @@
                     formData.append("tags", tags);
                     formData.append("category", category);
                     formData.append("videoId", videoId);
+                    formData.append("playlist", playlist);
                     // console.log(video, thumbnail, title, description, tags, category);
 
                     fetch("http://localhost:3000/edit", {

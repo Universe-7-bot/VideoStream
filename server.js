@@ -966,6 +966,7 @@ app.post("/edit", (req, res) => {
                         res.json({ msg: "Sorry you do not own this video" });
                     }
                     else {
+                        var oldPlaylistId = Video.playlist;
                         if (files.thumbnail) {
                             newPath = "static/thumbnails/" + new Date().getTime() + "-" + files.thumbnail.originalFilename;
                             fs.unlink(Video.thumbnail, (error) => {
@@ -984,27 +985,82 @@ app.post("/edit", (req, res) => {
                                     "description": description,
                                     "tags": tags,
                                     "category": category,
-                                    "thumbnail": newPath
+                                    "thumbnail": newPath,
+                                    "playlist": playlist == "Select playlist" ? "" : playlist
                                 }
-                            }).then(() => {
-
-                            })
-
-                            user.findOneAndUpdate({
-                                $and: [{
-                                    "_id": new ObjectId(req.session.userid)
+                            }).then((updatedVideo) => {
+                                user.findOneAndUpdate({
+                                    $and: [{
+                                        "_id": new ObjectId(req.session.userid)
+                                    }, {
+                                        "videos._id": new ObjectId(videoId)
+                                    }]
                                 }, {
-                                    "videos._id": new ObjectId(videoId)
-                                }]
-                            }, {
-                                $set: {
-                                    "videos.$.title": title,
-                                    "videos.$.category": category,
-                                    "videos.$.thumbnail": newPath,
+                                    $set: {
+                                        "videos.$.title": title,
+                                        "videos.$.category": category,
+                                        "videos.$.thumbnail": newPath
+                                    }
+                                }).then((User) => {
+                                    // console.log(User);
+                                });
+
+                                if (playlist == "Select playlist") {
+                                    //do nothing
+                                    if (oldPlaylistId != "") {
+                                        user.updateOne({
+                                            $and: [{
+                                                _id: new ObjectId(req.session.userid)
+                                            }, {
+                                                "playlists._id": new ObjectId(oldPlaylistId)
+                                            }]
+                                        }, {
+                                            $pull: {
+                                                "playlists.$.videos": {
+                                                    "_id": videoId
+                                                }
+                                            }
+                                        }).then(() => { })
+                                    }
                                 }
-                            }).then((User) => {
-                                // console.log(User);
+                                else {
+                                    if (oldPlaylistId != "") {//video is already in another playlist
+                                        user.updateOne({
+                                            $and: [{
+                                                _id: new ObjectId(req.session.userid)
+                                            }, {
+                                                "playlists._id": new ObjectId(oldPlaylistId)
+                                            }]
+                                        }, {
+                                            $pull: {
+                                                "playlists.$.videos": {
+                                                    "_id": videoId
+                                                }
+                                            }
+                                        }).then(() => { })
+                                    }
+                                    //change playlist
+                                    user.updateOne({
+                                        $and: [{
+                                            _id: new ObjectId(req.session.userid)
+                                        }, {
+                                            "playlists._id": new ObjectId(playlist)
+                                        }]
+                                    }, {
+                                        $push: {
+                                            "playlists.$.videos": {
+                                                "_id": videoId,
+                                                "title": title,
+                                                "category": category,
+                                                "watch": Video.watch,
+                                                "createdAt": Video.createdAt,
+                                                "thumbnail": newPath
+                                            }
+                                        }
+                                    }).then(() => { })
+                                }
                             })
+
                             return res.json({ msg: "Video updated successfully!", userid: req.session.userid, code: 400 });
                             // console.log("with thumbnail edited");
                             // res.redirect("/channel/" + req.session.userid);
@@ -1020,27 +1076,90 @@ app.post("/edit", (req, res) => {
                                     "description": description,
                                     "tags": tags,
                                     "category": category,
-                                    "thumbnail": videothumbnail
+                                    "thumbnail": videothumbnail,
+                                    "playlist": playlist == "Select playlist" ? "" : playlist
                                 }
-                            }).then(() => {
-
-                            })
-
-                            user.findOneAndUpdate({
-                                $and: [{
-                                    "_id": new ObjectId(req.session.userid)
+                            }).then((updatedVideo) => {
+                                user.findOneAndUpdate({
+                                    $and: [{
+                                        "_id": new ObjectId(req.session.userid)
+                                    }, {
+                                        "videos._id": new ObjectId(videoId)
+                                    }]
                                 }, {
-                                    "videos._id": new ObjectId(videoId)
-                                }]
-                            }, {
-                                $set: {
-                                    "videos.$.title": title,
-                                    "videos.$.category": category,
-                                    "videos.$.thumbnail": videothumbnail
+                                    $set: {
+                                        "videos.$.title": title,
+                                        "videos.$.category": category,
+                                        "videos.$.thumbnail": videothumbnail
+                                    }
+                                }).then((User) => {
+                                    // console.log(User);
+                                })
+
+                                if (playlist == "Select playlist") {
+                                    //do nothing
+                                    // console.log("do nothing")
+                                    if (oldPlaylistId != "") { //video is already in another playlist
+                                        user.updateOne({
+                                            $and: [{
+                                                _id: new ObjectId(req.session.userid)
+                                            }, {
+                                                "playlists._id": new ObjectId(oldPlaylistId)
+                                            }]
+                                        }, {
+                                            $pull: {
+                                                "playlists.$.videos": {
+                                                    "_id": videoId
+                                                }
+                                            }
+                                        }).then(() => { })
+                                        // console.log("old playlist removed if")
+                                    }
                                 }
-                            }).then((User) => {
-                                // console.log(User);
+                                else {
+                                    if (oldPlaylistId != "") {//video is already in another playlist
+                                        user.updateOne({
+                                            $and: [{
+                                                _id: new ObjectId(req.session.userid)
+                                            }, {
+                                                "playlists._id": new ObjectId(oldPlaylistId)
+                                            }]
+                                        }, {
+                                            $pull: {
+                                                "playlists.$.videos": {
+                                                    "_id": videoId
+                                                }
+                                            }
+                                        }).then(() => { })
+                                        console.log("old playlist removed else")
+                                    }
+                                    // console.log(oldPlaylistId, "+",playlist);
+
+                                    //change playlist
+                                    user.updateOne({
+                                        $and: [{
+                                            _id: new ObjectId(req.session.userid)
+                                        }, {
+                                            "playlists._id": new ObjectId(playlist)
+                                        }]
+                                    }, {
+                                        $push: {
+                                            "playlists.$.videos": {
+                                                "_id": videoId,
+                                                "title": title,
+                                                "category": category,
+                                                "watch": Video.watch,
+                                                "createdAt": Video.createdAt,
+                                                "thumbnail": videothumbnail
+                                            }
+                                        }
+                                    }).then(() => {
+
+                                    })
+                                    // console.log("updated")
+                                }
                             })
+
                             return res.json({ msg: "Video updated successfully!", userid: req.session.userid, code: 400 });
                             // console.log("no thumbnail edited");
                             // res.redirect("/channel/" + req.session.userid);
@@ -1108,6 +1227,37 @@ app.post("/delete-video", (req, res) => {
                 }).then(() => {
 
                 })
+
+                user.findOne({ _id: new ObjectId(req.session.userid) }).then((User) => {
+                    var playlistId = "";
+                    for (let i = 0; i < User.playlists.length; i++) {
+                        for (let j = 0; j < User.playlists[i].videos.length; j++) {
+                            var video = User.playlists[i].videos[j];
+                            if (video._id == videoId) {
+                                playlistId = User.playlists[i]._id;
+                                break;
+                            }
+                        }
+                    }
+                    if (playlistId != "") {
+                        user.updateOne({
+                            $and: [{
+                                _id: new ObjectId(req.session.userid)
+                            }, {
+                                "playlists._id": new ObjectId(playlistId)
+                            }]
+                        }, {
+                            $pull: {
+                                "playlists.$.videos": {
+                                    "_id": videoId
+                                }
+                            }
+                        }).then(() => {
+
+                        })
+                    }
+                })
+
                 return res.json({ msg: "Video deleted successfully", code: 400, userid: req.session.userid });
                 // res.redirect("/channel/" + req.session.userid);
             })
@@ -1124,18 +1274,24 @@ app.post("/create-playlist", (req, res) => {
     try {
         if (req.session.userid) {
             const { title } = req.body;
+            if (title.trim() == "") {
+                return res.json({msg: "Title is required", code: 401});
+            }
             user.updateOne({
                 _id: new ObjectId(req.session.userid)
             }, {
                 $push: {
-                    "_id": new ObjectId(),
-                    "title": title,
-                    "videos": []
+                    "playlists": {
+                        "_id": new ObjectId(),
+                        "title": title,
+                        "videos": []
+                    }
                 }
             }).then(() => {
 
             })
-            res.redirect("/channel/" + req.session.userid);
+            return res.json({ msg: "New playlist has been created, add videos", code: 500, userid: req.session.userid });
+            // res.redirect("/channel/" + req.session.userid);
         }
         else {
             res.redirect("/login");
