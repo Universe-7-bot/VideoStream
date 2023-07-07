@@ -278,3 +278,9 @@
     box-shadow: 0 0 0 0.15rem rgb(235, 216, 236);
     background-color: white;
 }
+
+/* ------------------- video-page ------------------- */
+.video-main-div {
+    min-height: 100vh;
+    width: 100%;
+}

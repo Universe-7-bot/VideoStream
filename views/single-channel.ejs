@@ -157,12 +157,11 @@
                                                                 <div class="card single-channel-playlist-card">
                                                                     <% if (playlist.videos.length > 0) { %>
                                                                     <div class="single-channel-playlist-overlay d-flex align-items-center justify-content-center">
-                                                                        <img src="/images/play-icon.svg" class="single-channel-play-icon" alt="play-icon"
-                                                                            onclick="">
+                                                                        <img src="/images/play-icon.svg" class="single-channel-play-icon" alt="play-icon" onclick="watchPlaylist(this)" playlist-id="<%= playlist._id %>" video-watch="<%= playlist.videos[0].watch %>">
                                                                     </div>
                                                                     <% } else { %>
                                                                         <div class="single-channel-playlist-overlay d-flex align-items-center justify-content-center">
-                                                                            <img src="/images/play-icon.svg" class="single-channel-play-icon" alt="play-icon" onclick="goToWatchVideo(this)">
+                                                                            <img src="/images/play-icon.svg" class="single-channel-play-icon" alt="play-icon" onclick="emptyPlaylist()">
                                                                         </div>
                                                                     <% } %>
                                                                             
@@ -318,6 +317,29 @@
                                 }
                             })
                         };
+
+                        const watchPlaylist = (element) => {
+                            const playlistid = element.getAttribute("playlist-id");
+                            const videowatch = element.getAttribute("video-watch");
+                            window.location.href = `/playlist/${playlistid}/${videowatch}`;
+                        }
+
+                        const emptyPlaylist = () => {
+                            Toastify({
+                                text: "This playlist contains no video",
+                                duration: 2000,
+                                newWindow: true,
+                                close: true,
+                                gravity: "top",
+                                position: "right",
+                                stopOnFocus: true,
+                                avatar: "/images/error-icon.svg",
+                                style: {
+                                    background: "#000000",
+                                },
+                                onClick: function () { } // Callback after click
+                            }).showToast();
+                        }
 
                         // const changeProfilePhoto = () => {
                         //     const profilePhoto = document.getElementById("input-file-change-profile-photo").files[0];

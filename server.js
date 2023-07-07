@@ -261,34 +261,37 @@ app.post("/upload-video", async (req, res) => {
 
 app.get("/watch/:watch", async (req, res) => {
     try {
+        var activeNotifications = 0;
         if (req.session.userid) {
             const User = await user.findOne({ _id: new ObjectId(req.session.userid) });
-            var activeNotifications = 0;
             if (User) {
                 const notifications = User.notification;
                 for (var i = 0; i < notifications.length; i++) {
                     if (notifications[i].is_read == false) activeNotifications++;
                 }
             }
-            const Video = await video.findOne({ watch: req.params.watch });
-            if (Video) {
-                video.findByIdAndUpdate(Video._id, {
-                    $inc: {
-                        views: 1
-                    }
-                }).then((Video) => {
+        }
+        const Video = await video.findOne({ watch: req.params.watch });
+        if (Video) {
+            video.findByIdAndUpdate(Video._id, {
+                $inc: {
+                    views: 1
+                }
+            }).then((Video) => {
 
-                }).catch((error) => {
-                    console.log(error);
-                })
-                res.render("video-page", { isAuthenticated: req.session.userid ? true : false, video: Video, notificationLength: activeNotifications });
-            }
-            else {
-                res.json({ msg: "Video does not exist", code: 500 });
-            }
+            }).catch((error) => {
+                console.log(error);
+            })
+            res.render("video-page", {
+                isAuthenticated: req.session.userid ? true : false,
+                video: Video,
+                notificationLength: activeNotifications,
+                playlist: [],
+                playlistId: ""
+            });
         }
         else {
-            res.redirect("/");
+            res.json({ msg: "Video does not exist", code: 500 });
         }
     } catch (err) {
         res.json({ msg: err.message, code: 501 });
@@ -1290,7 +1293,7 @@ app.post("/create-playlist", (req, res) => {
             }).then(() => {
 
             })
-            return res.json({ msg: "New playlist has been created, add videos", code: 500, userid: req.session.userid });
+            return res.json({ msg: "New playlist has been created", code: 500, userid: req.session.userid });
             // res.redirect("/channel/" + req.session.userid);
         }
         else {
@@ -1299,6 +1302,56 @@ app.post("/create-playlist", (req, res) => {
     } catch (error) {
         if (error) console.log(error);
     }
+})
+
+app.get("/playlist/:_id/:watch", async (req, res) => {
+    var activeNotifications = 0;
+    if (req.session.userid) {
+        const User = await user.findOne({ _id: new ObjectId(req.session.userid) });
+        if (User) {
+            const notifications = User.notification;
+            for (var i = 0; i < notifications.length; i++) {
+                if (notifications[i].is_read == false) activeNotifications++;
+            }
+        }
+    }
+    video.findOne({
+        $and: [{
+            "watch": parseInt(req.params.watch)
+        }, {
+            "playlist": req.params._id
+        }]
+    }).then((Video) => {
+        if (!Video) {
+            return res.json({ msg: "Video does not exist" });
+        }
+        else {
+            video.updateOne({
+                _id: new ObjectId(Video._id)
+            }, {
+                $inc: {
+                    "views": 1
+                }
+            }).then(() => {
+            })
+            user.findOne({
+                _id: new ObjectId(Video.user._id)
+            }).then((User) => {
+                var playlistVideos = [];
+                for (let i = 0; i < User.playlists.length; i++) {
+                    if (User.playlists[i]._id == req.params._id)
+                        playlistVideos = User.playlists[i].videos;
+                }
+                res.render("video-page", {
+                    isAuthenticated: req.session.userid ? true : false,
+                    video: Video,
+                    playlist: playlistVideos,
+                    playlistId: req.params._id,
+                    notificationLength: activeNotifications,
+                })
+            })
+        }
+    })
 })
 
 app.listen(PORT, (err) => {
