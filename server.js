@@ -329,7 +329,8 @@ app.post("/do-like", (req, res) => {
         })
     }
     else {
-        res.redirect("/");
+        // res.redirect("/");
+        res.json({ msg: "Login to like a video", code: 300 });
     }
 })
 

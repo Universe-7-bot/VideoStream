@@ -8,9 +8,9 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
-    <link rel="stylesheet" type="text/css" href="/css/style1.css">
+    <!-- <link rel="stylesheet" type="text/css" href="/css/style1.css"> -->
     <link rel="stylesheet" type="text/css" href="/css/style2.css">
-    <!-- <link rel="stylesheet" type="text/css" href="/css/style3.css"> -->
+    <link rel="stylesheet" type="text/css" href="/css/style3.css">
 </head>
 
 <body>
@@ -19,119 +19,65 @@
             <%- include("components/header.ejs") %>
                 <div class="sidenav-content d-flex flex-row">
                     <%- include("components/side-navbar.ejs") %>
-                        <div class="content-wrapper d-flex flex-row" id="content-wrapper">
-                            <div class="video-wrapper">
-                                <input type="hidden" id="videoId" value="<%= video._id %>">
-                                <input type="hidden" id="category" value="<%= video.category %>">
-                                <video id="videoPlayer" poster="<%= baseUrl + video.thumbnail.substring(7) %>"
-                                    src="<%= baseUrl + video.filePath.substring(7) %>" controls></video>
-                                <div class="row video-page-row">
-                                    <div class="col-md-5">
-                                        <h2 class="video-title">
-                                            <%= video.title %>
-                                        </h2>
-                                        <p class="video-uploader-name">uploaded by <%= video.user.name %>
-                                        </p>
+                        <div class="content-wrapper" id="content-wrapper">
+                            <div class="row video-page-row d-flex flex-row">
+                                <div class="video-wrapper">
+                                    <input type="hidden" id="videoId" value="<%= video._id %>">
+                                    <input type="hidden" id="category" value="<%= video.category %>">
+                                    <video id="videoPlayer" poster="<%= baseUrl + video.thumbnail.substring(7) %>"
+                                        src="<%= baseUrl + video.filePath.substring(7) %>" controls></video>
+
+                                    <% const created=new Date(video.createdAt); const date=created.getDate() + ""; 
+                                    const months=["January", "February", "March" , "April" , "May" , "June" , "July" , "August" , "September" , "October" , "November" , "December" ]; %>
+                                    <div class="video-details-wrapper d-flex flex-row">
+                                        <div class="video-details d-flex flex-column">
+                                            <p class="video-title"><%= video.title %></p>
+                                            <div class="views-watch d-flex flex-row">
+                                                <p class="video-posted-on">
+                                                    <img src="/images/calendar.svg" class="video-details-calendar" alt="calendar-icon" />
+                                                    <span class="post"> Published on <%= date.padStart(2, '0' ) + " " + months[created.getMonth()] + " " + created.getFullYear() %></span>
+                                                </p>
+                                                <p class="video-views">
+                                                    <img src="/images/history-eye.svg" class="video-details-eye" alt="eye-icon" />
+                                                    <span id="views"> <%= video.views %> </span>
+                                                    <span class="views"> views</span>
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div class="video-like-dislike d-flex flex-row align-items-center justify-content-center">
+                                            <button onclick="doLike()" class="like-btn d-flex flex-row align-items-center justify-content-center">
+                                                <img class="like-icon" id="likeicon" src="/images/like-before.svg" alt="like">
+                                                <p id="likecount" class="like-count">
+                                                    <%= video.likers.length %>
+                                                </p>
+                                            </button>
+                                            <button onclick="doDislike()" class="dislike-btn d-flex flex-row align-items-center justify-content-center">
+                                                <img class="dislike-icon" id="dislikeicon" src="/images/dislike-before.svg" alt="dislike">
+                                                <p id="dislikecount" class="dislike-count">
+                                                    <%= video.dislikers.length %>
+                                                </p>
+                                            </button>
+                                        </div>
                                     </div>
-                                    <div class="col-md-4 d-flex flex-row justify-content-center">
-                                        <button onclick="doLike()"
-                                            class="like-btn d-flex flex-row justify-content-center">
-                                            <img class="like-icon" id="likeicon" src="/images/like-before.svg"
-                                                alt="like">
-                                            <p id="likecount" class="like-count mx-1">
-                                                <%= video.likers.length %>
-                                            </p>
-                                        </button>
-                                        <button onclick="doDislike()"
-                                            class="like-btn mx-3 d-flex flex-row justify-content-center">
-                                            <img class="like-icon" id="dislikeicon" src="/images/dislike-before.svg"
-                                                alt="dislike">
-                                            <p id="dislikecount" class="like-count mx-1">
-                                                <%= video.dislikers.length %>
-                                            </p>
-                                        </button>
-                                    </div>
-                                    <div class="col-md-3 d-flex flex-row">
-                                        <%- include("subscribe.ejs") %>
+                                    <div class="channel-details-wrapper d-flex flex-row">
+                                        <div class="channel-details d-flex flex-row align-items-center">
+                                            <img src="<%= baseUrl + video.user.image.substring(7) %>" class="user-image" onerror="this.src='/images/user-icon.svg'" alt="user-image">
+                                            <div class="user-details d-flex flex-column">
+                                                <a href="/channel/<%= video.user._id %>">
+                                                    <p class="video-uploader-name">
+                                                        <%= video.user.name %>
+                                                    </p>
+                                                </a>
+                                                <p class="subscriber-count"><span id="total-subscribers"><%= video.user.subscribers %></span> subscribers</p>
+                                            </div>
+                                        </div>
+                                        <div class="channel-details-subscribe d-flex align-items-center justify-content-center">
+                                            <%- include("subscribe.ejs") %>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="blank1"></div>
-
-                                <% const created=new Date(video.createdAt); const date=created.getDate() + "" ; const
-                                    months=["January", "February" , "March" , "April" , "May" , "June" , "July"
-                                    , "August" , "September" , "October" , "November" , "December" ]; %>
-
-                                    <div class="video-stuff d-flex justify-content-between">
-                                        <p class="video-posted-on">Posted on <%= date.padStart(2, '0' ) + " " +
-                                                months[created.getMonth()] + " " + created.getFullYear() %>
-                                        </p>
-                                        <p class="video-views"><img src="/images/eye.svg" class="eye-icon"
-                                                alt="eye-icon" />
-                                            <span id="views">
-                                                <%= video.views %>
-                                            </span> views
-                                        </p>
-                                    </div>
-                                    <div class="blank1"></div>
-                                    <p class="video-category"><b>Category :</b>
-                                        <%= video.category %>
-                                    </p>
-                                    <p class="video-description">
-                                        <%= video.description %>
-                                    </p>
-                                    <div class="comment d-flex flex-column">
-                                        <p class="comment-heading">Leave a comment :</p>
-                                        <textarea placeholder="Write your comment here..."
-                                            class="form-control comment-text" id="textarea-comment" rows="4"></textarea>
-                                        <button onclick="postComment()" class="comment-btn">Post comment</button>
-                                    </div>
-                                    <div class="show-comments" id="showcomments">
-                                        <% var allComments=video.comments.reverse(); allComments.forEach((comment)=> { %>
-                                            <div class="comment-details d-flex flex-row">
-                                                <img class="comment-img" src="<%= comment.user.image %>"
-                                                    onerror="this.src='/images/user-icon.svg'" alt="user-img" />
-                                                <div class="comment-body d-flex flex-column">
-                                                    <p class="comment-body-username">
-                                                        <%= comment.user.name %>
-                                                    </p>
-                                                    <p class="comment-body-text">
-                                                        <%= comment.comment %>
-                                                    </p>
-                                                </div>
-                                                <% if(isAuthenticated) { %>
-                                                    <div
-                                                        class="reply-btn-wrapper d-flex align-items-end justify-content-end">
-                                                        <button id="" class="btn reply-btn"
-                                                            onclick="createReplyNode(this)"
-                                                            data-comment-id="<%= comment._id %>">Reply</button>
-                                                    </div>
-                                                    <% }; %>
-                                            </div>
-                                            <div class="reply-node-container" id="<%= comment._id %>">
-                                            </div>
-                                            <div class="replies" id="replies<%= comment._id%>">
-                                                <% var allReplies=comment.replies.reverse();
-                                                    allReplies.forEach((reply)=> { %>
-                                                    <div class="reply-details d-flex flex-row">
-                                                        <img class="reply-img" src="<%= reply.user.image %>"
-                                                            onerror="this.src='/images/user-icon.svg'" alt="user-img" />
-                                                        <div class="reply-body d-flex flex-column">
-                                                            <p class="reply-body-username">
-                                                                <%= reply.user.name %>
-                                                            </p>
-                                                            <p class="reply-body-text">
-                                                                <%= reply.reply %>
-                                                            </p>
-                                                        </div>
-                                                    </div>
-                                                    <% }); %>
-                                            </div>
-                                            <% }); %>
-                                    </div>
-                            </div>
-                            <div class="side-bar">
-                                <%- include("related-videos.ejs") %>
-                            </div>
+                                <div class="side-bar"></div>
+                            </div>           
                         </div>
                 </div>
         </div>
@@ -153,35 +99,35 @@
                             }).then((res) => {
                                 return res.json();
                             }).then((f_res) => {
-                                alert(f_res.msg);
+                                // alert(f_res.msg);
                             })
                         }
                     }
                 </script>
                 <% } %>
                     <script>
-                        window.onload = () => {
-                            document.getElementById("views").innerHTML = parseInt(document.getElementById("views").innerHTML) + 1;
-                            const videoId = document.getElementById("videoId").value;
-                            if (!localStorage.getItem(videoId + "?isLiked"))
-                                localStorage.setItem(videoId + "?isLiked", "false");
+                        // window.onload = () => {
+                        //     document.getElementById("views").innerHTML = parseInt(document.getElementById("views").innerHTML) + 1;
+                        //     const videoId = document.getElementById("videoId").value;
+                        //     if (!localStorage.getItem(videoId + "?isLiked"))
+                        //         localStorage.setItem(videoId + "?isLiked", "false");
 
-                            if (!localStorage.getItem(videoId + "?isDisliked"))
-                                localStorage.setItem(videoId + "?isDisliked", "false");
+                        //     if (!localStorage.getItem(videoId + "?isDisliked"))
+                        //         localStorage.setItem(videoId + "?isDisliked", "false");
 
-                            let likeicon = document.getElementById("likeicon");
-                            let dislikeicon = document.getElementById("dislikeicon");
+                        //     let likeicon = document.getElementById("likeicon");
+                        //     let dislikeicon = document.getElementById("dislikeicon");
 
-                            if (localStorage.getItem(videoId + "?isLiked") == "false")
-                                likeicon.src = "/images/like-before.svg";
-                            else
-                                likeicon.src = "/images/like-after.svg";
+                        //     if (localStorage.getItem(videoId + "?isLiked") == "false")
+                        //         likeicon.src = "/images/like-before.svg";
+                        //     else
+                        //         likeicon.src = "/images/like-after.svg";
 
-                            if (localStorage.getItem(videoId + "?isDisliked") == "false")
-                                dislikeicon.src = "/images/dislike-before.svg";
-                            else
-                                dislikeicon.src = "/images/dislike-after.svg";
-                        }
+                        //     if (localStorage.getItem(videoId + "?isDisliked") == "false")
+                        //         dislikeicon.src = "/images/dislike-before.svg";
+                        //     else
+                        //         dislikeicon.src = "/images/dislike-after.svg";
+                        // }
 
                         const createReplyNode = (element) => {
                             const commentId = element.getAttribute("data-comment-id");
@@ -275,8 +221,8 @@
 
                         const doLike = () => {
                             const videoId = document.getElementById("videoId").value;
-                            localStorage.setItem(videoId + "?isLiked", "true");
-                            document.getElementById("likeicon").src = "/images/like-after.svg";
+                            // localStorage.setItem(videoId + "?isLiked", "true");
+                            // document.getElementById("likeicon").src = "/images/like-after.svg";
                             fetch("http://localhost:3000/do-like", {
                                 method: "POST", headers: {
                                     "Content-Type": "application/json"
@@ -318,13 +264,29 @@
                                         onClick: function () { } // Callback after click
                                     }).showToast();
                                 }
+                                else if (f_res.code == 300) {
+                                    Toastify({
+                                        text: f_res.msg,
+                                        duration: 2000,
+                                        newWindow: true,
+                                        close: true,
+                                        gravity: "top",
+                                        position: "right",
+                                        stopOnFocus: true,
+                                        avatar: "/images/error-icon.svg",
+                                        style: {
+                                            background: "#000000",
+                                        },
+                                        onClick: function () { } // Callback after click
+                                    }).showToast();
+                                }
                             })
                         }
 
                         const doDislike = () => {
                             const videoId = document.getElementById("videoId").value;
-                            localStorage.setItem(videoId + "?isDisliked", "true");
-                            document.getElementById("dislikeicon").src = "/images/dislike-after.svg";
+                            // localStorage.setItem(videoId + "?isDisliked", "true");
+                            // document.getElementById("dislikeicon").src = "/images/dislike-after.svg";
                             fetch("http://localhost:3000/do-dislike", {
                                 method: "POST", headers: {
                                     "Content-Type": "application/json"

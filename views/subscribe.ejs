@@ -1,5 +1,7 @@
-<button class="subscribe-btn d-flex align-items-center justify-content-center" onclick="doSubscribe()">Subscribe</button>
-<p class="subscriber-count"><span id="total-subscribers"><%= video.user.subscribers %></span> subscribers</p>
+<button class="video-page-subscribe-btn d-flex align-items-center justify-content-center" onclick="doSubscribe()">
+    <img src="/images/subscribe.svg" class="video-page-subscribe-icon" alt="subscribe">
+    <p class="video-page-subscribe-text">Subscribe</p>
+</button>
 
 <script>
     const doSubscribe = () => {

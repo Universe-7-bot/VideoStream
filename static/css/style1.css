@@ -607,18 +607,18 @@
 
 /* ---------------------------------------------------------------------------- */
 /* ------------------------------ watch-video page ---------------------------- */
-.video-main-div {
+/* .video-main-div {
     min-height: 42.2rem;
     width: 100%;
     background-color: #160a4c;
-}
+} */
 
-#videoPlayer {
+/* #videoPlayer {
     height: 30rem;
     width: 95%;
     margin: 2rem 0 1rem 0;
     object-fit: fill;
-}
+} */
 
 .video-title {
     color: white;
@@ -885,17 +885,17 @@
     color: white;
 }
 
-.video-wrapper {
+/* .video-wrapper {
     padding-left: 4rem;
     width: 70%;
-}
+} */
 
 /* related-videos */
-.side-bar {
+/* .side-bar {
     width: 30%;
     height: 100vh;
     margin: 2rem 4rem 0 1rem;
-}
+} */
 
 .related-videos {
     width: 100%;
